@@ -1,113 +1,178 @@
-const header = document.querySelector('.site-header');
-const menuButton = document.querySelector('.menu-toggle');
-const nav = document.querySelector('.nav-links');
-const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = (s, root=document) => root.querySelector(s);
+const $$ = (s, root=document) => [...root.querySelectorAll(s)];
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-function updateHeader() {
-  header.classList.toggle('is-scrolled', window.scrollY > 24);
-}
+const header = $('.header');
+const updateHeader = () => header.classList.toggle('is-scrolled', scrollY > 30);
 updateHeader();
-window.addEventListener('scroll', updateHeader, { passive: true });
+addEventListener('scroll', updateHeader, {passive:true});
 
-function closeMenu() {
-  menuButton.setAttribute('aria-expanded', 'false');
-  menuButton.setAttribute('aria-label', 'Open menu');
-  nav.classList.remove('is-open');
+const menuBtn = $('.menu-btn');
+const navLinks = $('#nav-links');
+function closeMenu(){
+  navLinks.classList.remove('is-open');
+  menuBtn.setAttribute('aria-expanded', 'false');
+  menuBtn.setAttribute('aria-label', 'Open menu');
   document.body.classList.remove('menu-open');
 }
-
-menuButton.addEventListener('click', () => {
-  const opening = menuButton.getAttribute('aria-expanded') !== 'true';
-  menuButton.setAttribute('aria-expanded', String(opening));
-  menuButton.setAttribute('aria-label', opening ? 'Close menu' : 'Open menu');
-  nav.classList.toggle('is-open', opening);
-  document.body.classList.toggle('menu-open', opening);
+menuBtn.addEventListener('click', () => {
+  const isOpen = !navLinks.classList.contains('is-open');
+  navLinks.classList.toggle('is-open',isOpen);
+  menuBtn.setAttribute('aria-expanded', String(isOpen));
+  menuBtn.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+  document.body.classList.toggle('menu-open',isOpen);
 });
+$$('#nav-links a').forEach(a=>a.addEventListener('click',closeMenu));
+addEventListener('resize',()=>{if(innerWidth>860)closeMenu();});
 
-nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && menuButton.getAttribute('aria-expanded') === 'true') {
-    closeMenu();
-    menuButton.focus();
-  }
-});
-window.addEventListener('resize', () => {
-  if (window.innerWidth > 680) closeMenu();
-});
+if(!reducedMotion && 'IntersectionObserver' in window){
+  const observer = new IntersectionObserver(entries=>entries.forEach(entry=>{
+    if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target);}
+  }),{threshold:.06,rootMargin:'0px 0px -25px 0px'});
+  $$('.reveal').forEach(el=>observer.observe(el));
+} else $$('.reveal').forEach(el=>el.classList.add('is-visible'));
 
-const revealItems = document.querySelectorAll('.reveal');
-if ('IntersectionObserver' in window && !reducedMotion) {
-  const observer = new IntersectionObserver((entries, currentObserver) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        currentObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -35px 0px' });
-  revealItems.forEach((item) => observer.observe(item));
-} else {
-  revealItems.forEach((item) => item.classList.add('is-visible'));
+const cursor = $('.cursor-glow');
+if(!reducedMotion && matchMedia('(pointer:fine)').matches){
+  let x=-500,y=-500,px=-500,py=-500;
+  addEventListener('pointermove',e=>{x=e.clientX;y=e.clientY;cursor.style.opacity='1';},{passive:true});
+  function track(){px+=(x-px)*.13;py+=(y-py)*.13;cursor.style.transform='translate3d('+(px-280)+'px,'+(py-280)+'px,0)';requestAnimationFrame(track);}
+  track();
 }
 
-const serviceImage = document.querySelector('#service-image');
-let imageRequest = 0;
-document.querySelectorAll('.service-item').forEach((item) => {
-  item.addEventListener('click', () => {
-    if (item.classList.contains('is-active')) return;
-    document.querySelectorAll('.service-item').forEach((button) => {
-      const active = button === item;
-      button.classList.toggle('is-active', active);
-      button.setAttribute('aria-pressed', String(active));
+if(!reducedMotion && matchMedia('(hover:hover) and (pointer:fine)').matches){
+  $$('.tilt-card').forEach(card=>{
+    card.addEventListener('pointermove',e=>{
+      const r=card.getBoundingClientRect(), px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
+      card.style.setProperty('--rx',((.5-py)*4)+'deg');
+      card.style.setProperty('--ry',((px-.5)*4)+'deg');
+      card.style.setProperty('--mx',(px*100)+'%');
+      card.style.setProperty('--my',(py*100)+'%');
     });
+    card.addEventListener('pointerleave',()=>{card.style.setProperty('--rx','0deg');card.style.setProperty('--ry','0deg');});
+  });
+  $$('.magnetic').forEach(btn=>{
+    btn.addEventListener('pointermove',e=>{
+      const r=btn.getBoundingClientRect();
+      btn.style.setProperty('--tx',((e.clientX-(r.left+r.width/2))*.09)+'px');
+      btn.style.setProperty('--ty',((e.clientY-(r.top+r.height/2))*.14)+'px');
+    });
+    btn.addEventListener('pointerleave',()=>{btn.style.setProperty('--tx','0px');btn.style.setProperty('--ty','0px');});
+  });
+}
 
-    const request = ++imageRequest;
-    const nextImage = new Image();
-    nextImage.onload = () => {
-      if (request !== imageRequest) return;
-      serviceImage.style.opacity = '0';
-      const commitImage = () => {
-        if (request !== imageRequest) return;
-        serviceImage.src = nextImage.src;
-        serviceImage.alt = item.dataset.alt;
-        serviceImage.style.opacity = '1';
-      };
-      if (reducedMotion) commitImage();
-      else window.setTimeout(commitImage, 140);
+const serviceImage = $('#service-image'), serviceNumber=$('#service-number'), serviceTitle=$('#service-detail-title'), serviceText=$('#service-detail-text');
+let imageSequence=0;
+$$('.service-tab').forEach((button,index)=>{
+  button.addEventListener('click',()=>{
+    if(button.classList.contains('is-active'))return;
+    $$('.service-tab').forEach(b=>{b.classList.toggle('is-active',b===button);b.setAttribute('aria-pressed',String(b===button));});
+    serviceTitle.textContent=button.dataset.title;
+    serviceText.textContent=button.dataset.text;
+    serviceNumber.textContent=String(index+1).padStart(2,'0')+' / 04';
+    const sequence=++imageSequence;
+    const img=new Image();
+    img.onload=()=>{
+      if(sequence!==imageSequence)return;
+      serviceImage.style.opacity='0';
+      setTimeout(()=>{
+        if(sequence!==imageSequence)return;
+        serviceImage.src=img.src;
+        serviceImage.alt=button.dataset.alt;
+        serviceImage.style.opacity='1';
+      },reducedMotion?0:130);
     };
-    nextImage.onerror = () => {
-      if (request === imageRequest) serviceImage.style.opacity = '1';
-    };
-    nextImage.src = item.dataset.image;
+    img.src=button.dataset.image;
   });
 });
 
-const year = document.querySelector('#year');
-year.textContent = new Date().getFullYear();
-
-const inquiryForm = document.querySelector('#inquiry-form');
-const eventDate = document.querySelector('#date');
-const formMessage = document.querySelector('#form-message');
-
-// Keep the date constraint current without accidentally excluding today.
-function updateMinimumDate() {
-  const now = new Date();
-  const localToday = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
-    .toISOString().slice(0, 10);
-  eventDate.min = localToday;
+const reviews=[
+  {quote:'The dance floor was never empty.',name:'JANET GUTARRA',type:'WEDDING • OCTOBER 2021'},
+  {quote:'A+ entertainment! Jason and Zack were an amazing team for our daughters B’Not Mitzvah celebration.',name:'SHAKARA ROSENBAUM',type:'BAT MITZVAH • SEPTEMBER 2021'},
+  {quote:'Hiring you was one of the best decisions we made.',name:'CINDY & DAVID SELTZER',type:'BAT MITZVAH • SEPTEMBER 2019'}
+];
+let reviewIndex=0;
+function renderReview(){
+ const r=reviews[reviewIndex];
+ $('#review-quote').textContent=r.quote;
+ $('#review-name').textContent=r.name;
+ $('#review-type').textContent=r.type;
+ $('#review-count').textContent=String(reviewIndex+1).padStart(2,'0')+' / 03';
+ $('#review-progress').style.width=((reviewIndex+1)/reviews.length*100)+'%';
 }
-updateMinimumDate();
-eventDate.addEventListener('focus', updateMinimumDate);
+$('#review-prev').addEventListener('click',()=>{reviewIndex=(reviewIndex+reviews.length-1)%reviews.length;renderReview();});
+$('#review-next').addEventListener('click',()=>{reviewIndex=(reviewIndex+1)%reviews.length;renderReview();});
+renderReview();
 
-inquiryForm.addEventListener('input', () => {
-  formMessage.classList.remove('is-submitted');
-  formMessage.textContent = 'This is a preview form. Inquiries are not being sent yet.';
+const gallery=$$('.gallery-shot img').map(img=>({src:img.getAttribute('src'),alt:img.alt}));
+let galleryIndex=0, returnFocus=null;
+const lightbox=$('#lightbox');
+function renderGallery(){
+ const item=gallery[galleryIndex];
+ $('#lightbox-image').src=item.src;$('#lightbox-image').alt=item.alt;
+ $('#lightbox-count').textContent=String(galleryIndex+1).padStart(2,'0')+' / '+String(gallery.length).padStart(2,'0');
+}
+function openGallery(index){
+ galleryIndex=index;returnFocus=document.activeElement;renderGallery();
+ lightbox.classList.add('is-open');lightbox.setAttribute('aria-hidden','false');
+ document.body.classList.add('lightbox-open');$('#lightbox-close').focus();
+}
+function closeGallery(){
+ lightbox.classList.remove('is-open');lightbox.setAttribute('aria-hidden','true');
+ document.body.classList.remove('lightbox-open');if(returnFocus)returnFocus.focus();
+}
+$$('.gallery-shot').forEach((btn,i)=>btn.addEventListener('click',()=>openGallery(i)));
+$('#lightbox-close').addEventListener('click',closeGallery);
+$('#lightbox-prev').addEventListener('click',()=>{galleryIndex=(galleryIndex+gallery.length-1)%gallery.length;renderGallery();});
+$('#lightbox-next').addEventListener('click',()=>{galleryIndex=(galleryIndex+1)%gallery.length;renderGallery();});
+lightbox.addEventListener('click',e=>{if(e.target===lightbox)closeGallery();});
+addEventListener('keydown',e=>{
+ if(e.key==='Escape'){if(lightbox.classList.contains('is-open'))closeGallery();else closeMenu();}
+ if(!lightbox.classList.contains('is-open'))return;
+ if(e.key==='ArrowRight'){$('#lightbox-next').click();e.preventDefault();}
+ if(e.key==='ArrowLeft'){$('#lightbox-prev').click();e.preventDefault();}
+ if(e.key==='Tab'){
+  const focusables=[$('#lightbox-close'),$('#lightbox-prev'),$('#lightbox-next')],i=focusables.indexOf(document.activeElement);
+  if(e.shiftKey && i<=0){focusables.at(-1).focus();e.preventDefault();}
+  else if(!e.shiftKey && i===focusables.length-1){focusables[0].focus();e.preventDefault();}
+ }
 });
 
-inquiryForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-  updateMinimumDate();
-  if (!inquiryForm.reportValidity()) return;
-  formMessage.textContent = 'This form is not connected yet, so your details have NOT been sent. Please contact Jammin Express directly to inquire.';
-  formMessage.classList.add('is-submitted');
+const occasion=$('#occasion');
+$$('[data-occasion]').forEach(link=>link.addEventListener('click',()=>{
+ const name=link.dataset.occasion;
+ const match=[...occasion.options].find(opt=>opt.textContent===name);
+ if(match)occasion.value=match.value;
+}));
+const dateInput=$('#date');
+function setMinimumDate(){
+ const now=new Date();
+ dateInput.min=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
+}
+setMinimumDate();
+dateInput.addEventListener('focus',setMinimumDate);
+
+$('#contact-form').addEventListener('submit',e=>{
+ e.preventDefault();
+ const form=e.currentTarget;
+ setMinimumDate();
+ if(!form.reportValidity())return;
+ const data=new FormData(form);
+ const val=k=>String(data.get(k)||'').trim();
+ const body=[
+   'Hello Jammin Express,','',
+   "I'd like to learn more about entertainment for my event.",'',
+   'Name: '+val('name'),
+   'Email: '+val('email'),
+   'Phone: '+(val('phone')||'Not provided'),
+   'Occasion: '+val('occasion'),
+   'Event date: '+(val('date')||'Not decided'),
+   'My vision: '+(val('message')||'Would love to discuss!'),'',
+   'Looking forward to hearing from you!'
+ ].join('\n');
+ const subject='Event inquiry: '+val('occasion')+' — '+val('name');
+ const mailto='mailto:jason@jamminexpress.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+ $('#form-status').textContent='Your email app should open with your event details. Review the message and press Send to deliver it. Nothing has been sent automatically.';
+ window.location.href=mailto;
 });
+$('#year').textContent=new Date().getFullYear();
