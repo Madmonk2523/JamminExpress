@@ -601,3 +601,14 @@ body {letter-spacing:-.005em}
 @media(prefers-reduced-motion:reduce){
   .hero__photo img {transition:none}
 }
+
+
+/* Contrast and finishing passes */
+:root {--blue:#126f9f;--blue2:#0d587e}
+.button--blue,.mobile-cta {background:#126f9f;color:#fff}
+.button--blue:hover {background:#0d587e}
+.experience-card:focus-visible,.gallery-shot:focus-visible {outline:3px solid #e65a50;outline-offset:4px}
+@media(max-width:700px){
+  .hero__photocredit {display:none}
+  .hero__stamp {box-shadow:0 7px 19px #05111d3b}
+}
