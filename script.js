@@ -51,30 +51,63 @@ if ('IntersectionObserver' in window && !reducedMotion) {
 }
 
 const serviceImage = document.querySelector('#service-image');
+let imageRequest = 0;
 document.querySelectorAll('.service-item').forEach((item) => {
   item.addEventListener('click', () => {
+    if (item.classList.contains('is-active')) return;
     document.querySelectorAll('.service-item').forEach((button) => {
-      button.classList.remove('is-active');
-      button.setAttribute('aria-pressed', 'false');
+      const active = button === item;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-pressed', String(active));
     });
-    item.classList.add('is-active');
-    item.setAttribute('aria-pressed', 'true');
-    serviceImage.style.opacity = '0';
-    window.setTimeout(() => {
-      serviceImage.onload = () => { serviceImage.style.opacity = '1'; };
-      serviceImage.onerror = () => { serviceImage.style.opacity = '1'; };
-      serviceImage.src = item.dataset.image;
-      serviceImage.alt = item.dataset.alt;
-    }, 140);
+
+    const request = ++imageRequest;
+    const nextImage = new Image();
+    nextImage.onload = () => {
+      if (request !== imageRequest) return;
+      serviceImage.style.opacity = '0';
+      const commitImage = () => {
+        if (request !== imageRequest) return;
+        serviceImage.src = nextImage.src;
+        serviceImage.alt = item.dataset.alt;
+        serviceImage.style.opacity = '1';
+      };
+      if (reducedMotion) commitImage();
+      else window.setTimeout(commitImage, 140);
+    };
+    nextImage.onerror = () => {
+      if (request === imageRequest) serviceImage.style.opacity = '1';
+    };
+    nextImage.src = item.dataset.image;
   });
 });
 
 const year = document.querySelector('#year');
 year.textContent = new Date().getFullYear();
 
-document.querySelector('#inquiry-form').addEventListener('submit', (event) => {
+const inquiryForm = document.querySelector('#inquiry-form');
+const eventDate = document.querySelector('#date');
+const formMessage = document.querySelector('#form-message');
+
+// Keep the date constraint current without accidentally excluding today.
+function updateMinimumDate() {
+  const now = new Date();
+  const localToday = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+    .toISOString().slice(0, 10);
+  eventDate.min = localToday;
+}
+updateMinimumDate();
+eventDate.addEventListener('focus', updateMinimumDate);
+
+inquiryForm.addEventListener('input', () => {
+  formMessage.classList.remove('is-submitted');
+  formMessage.textContent = 'This is a preview form. Inquiries are not being sent yet.';
+});
+
+inquiryForm.addEventListener('submit', (event) => {
   event.preventDefault();
-  const message = document.querySelector('#form-message');
-  message.textContent = 'Thanks for sharing the details. This form still needs a booking-system connection before it can send.';
-  message.classList.add('is-submitted');
+  updateMinimumDate();
+  if (!inquiryForm.reportValidity()) return;
+  formMessage.textContent = 'This form is not connected yet, so your details have NOT been sent. Please contact Jammin Express directly to inquire.';
+  formMessage.classList.add('is-submitted');
 });
