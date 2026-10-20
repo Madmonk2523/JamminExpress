@@ -186,6 +186,17 @@
   const gsap = window.gsap;
   const ScrollTrigger = window.ScrollTrigger;
   gsap.registerPlugin(ScrollTrigger);
+  // Load-in motion is intentionally limited to the first viewport.
+  const opening = gsap.timeline({defaults:{ease:'power3.out'}});
+  if ($('.hero')) {
+    opening.from('.hero-kicker',{opacity:0,y:18,duration:.7})
+      .from('.hero h1',{opacity:0,y:55,duration:1.1},'-=.35')
+      .from('.hero-description',{opacity:0,y:20,duration:.75},'-=.55');
+  } else if ($('.page-hero')) {
+    opening.from('.page-hero-copy .micro',{opacity:0,y:15,duration:.55})
+      .from('.page-hero h1',{opacity:0,y:40,duration:.9},'-=.25')
+      .from('.page-hero-copy>p',{opacity:0,y:17,duration:.75},'-=.5');
+  }
 
   // Short, staggered content entrances; keep all text in the DOM and accessible.
   $$('[data-reveal]').forEach(el => {
@@ -211,6 +222,7 @@
     mm.add('(min-width: 761px)', () => {
       const distance = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
       if (distance() < 40) return;
+      showcase.classList.add('is-pinned');
       const move = gsap.to(track, {
         x:() => -distance(), ease:'none',
         scrollTrigger:{
@@ -226,7 +238,7 @@
           end:() => '+=' + (distance() + 260),scrub:true
         }
       });
-      return () => {move.kill();gsap.set(track,{clearProps:'transform'});};
+      return () => {move.kill();showcase.classList.remove('is-pinned');gsap.set(track,{clearProps:'transform'});};
     });
   }
 
