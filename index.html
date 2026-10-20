@@ -1,246 +1,98 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101820">
-  <meta name="description" content="Jammin' Express Entertainment provides DJs, MCs, party motivators and event entertainment for Bar and Bat Mitzvahs, weddings, corporate celebrations and private events in South Florida. Established 1993.">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Jammin' Express Entertainment">
-  <meta property="og:title" content="Jammin' Express | South Florida Event Entertainment">
-  <meta property="og:description" content="DJs, MCs and memorable event entertainment in South Florida since 1993.">
-  <meta property="og:url" content="https://jamminexpress.vercel.app/">
-  <meta property="og:image" content="https://jamminexpress.vercel.app/428615588_10168440660855565_6620285281218327242_n.jpg">
-  <meta name="twitter:card" content="summary_large_image">
-  <title>Jammin' Express | South Florida Event Entertainment</title>
-  <link rel="icon" type="image/png" href="logo.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="428615588_10168440660855565_6620285281218327242_n.jpg" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css">
-  <script>document.documentElement.classList.add('js');</script>
-  <script src="script.js" defer></script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"EntertainmentBusiness","name":"Jammin' Express Entertainment, Inc.","url":"https://jamminexpress.com/","telephone":"+1-954-659-3472","email":"jason@jamminexpress.com","address":{"@type":"PostalAddress","addressLocality":"Weston","addressRegion":"FL","addressCountry":"US"},"areaServed":"South Florida","foundingDate":"1993"}</script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101419">
+<meta name="description" content="Jammin' Express is a South Florida event entertainment company providing DJs, MCs, party motivators, weddings, mitzvahs, game shows, and event video since 1993.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Jammin' Express Entertainment">
+<meta property="og:title" content="Jammin' Express — South Florida Event Entertainment">
+<meta property="og:description" content="Full-service DJ, MC and event entertainment in South Florida since 1993.">
+<meta property="og:image" content="https://jamminexpress.vercel.app/428615588_10168440660855565_6620285281218327242_n.jpg"><meta name="twitter:card" content="summary_large_image">
+<title>Jammin' Express — South Florida Event Entertainment</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="428615588_10168440660855565_6620285281218327242_n.jpg" fetchpriority="high">
+<link rel="stylesheet" href="styles.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script defer src="script.js"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"EntertainmentBusiness","name":"Jammin' Express Entertainment, Inc.","url":"https://jamminexpress.com/","telephone":"+1-954-659-3472","email":"jason@jamminexpress.com","foundingDate":"1993","address":{"@type":"PostalAddress","addressLocality":"Weston","addressRegion":"FL","addressCountry":"US"},"areaServed":"South Florida"}</script>
 </head>
-<body>
+<body data-page="home">
 <a class="skip-link" href="#main">Skip to content</a>
-<div class="scroll-progress" aria-hidden="true"><span id="scroll-progress"></span></div>
-
+<div class="scroll-meter" aria-hidden="true"><span></span></div>
 <header class="site-header" id="top">
-  <div class="container header-inner">
-    <a class="brand" href="#top" aria-label="Jammin' Express Entertainment homepage">
-      <img src="logo.png" alt="" width="201" height="161">
-      <span><strong>jammin'<br>express</strong><small>ENTERTAINMENT</small></span>
-    </a>
-    <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
-      <a href="#events">Events</a>
-      <a href="#services">Services</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#about">About</a>
-      <a class="nav-mobile-contact" href="#contact">Contact <span aria-hidden="true">↗</span></a>
-    </nav>
-    <a class="nav-cta" href="#contact">PLAN AN EVENT <span aria-hidden="true">↗</span></a>
-    <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation"><span></span><span></span></button>
-  </div>
+ <div class="shell header-inner">
+  <a class="brand" href="index.html" aria-label="Jammin Express, home"><img src="logo.png" alt="" width="201" height="161"><span>JAMMIN'<br>EXPRESS<small>ENTERTAINMENT</small></span></a>
+  <nav class="nav-links" id="main-nav" aria-label="Primary navigation">
+   <a href="events.html">Events</a><a href="services.html">Entertainment</a><a href="gallery.html">Gallery</a><a href="about.html">About</a><a href="testimonials.html">Reviews</a><a class="mobile-nav-contact" href="contact.html">Contact <span>↗</span></a>
+  </nav>
+  <a href="contact.html" class="header-cta">PLAN AN EVENT <span aria-hidden="true">↗</span></a>
+  <button id="menu-toggle" class="menu-toggle" type="button" aria-label="Open navigation" aria-controls="main-nav" aria-expanded="false"><i></i><i></i></button>
+ </div>
 </header>
-
 <main id="main">
-  <section class="hero" aria-labelledby="hero-title">
-    <div class="hero-image"><img id="hero-image" src="428615588_10168440660855565_6620285281218327242_n.jpg" alt="Jammin' Express entertainer and guests celebrating together on an illuminated dance floor" width="960" height="640" fetchpriority="high"></div>
-    <div class="hero-overlay" aria-hidden="true"></div>
-    <div class="container hero-inner">
-      <p class="eyebrow eyebrow-light hero-eyebrow"><span class="eyebrow-line"></span> SOUTH FLORIDA · EST. 1993</p>
-      <h1 id="hero-title">Entertainment<br>for your <span>celebration.</span></h1>
-      <div class="hero-bottom">
-        <p>Experienced DJs, MCs and entertainers for mitzvahs, weddings and private events.</p>
-        <a class="button button-light" href="#events">EXPLORE EVENTS <span aria-hidden="true">↗</span></a>
-      </div>
-    </div>
-    <a class="hero-scroll" href="#intro" aria-label="Explore Jammin Express services"><span>SCROLL TO EXPLORE</span><span class="hero-scroll-line" aria-hidden="true"></span></a>
-    <span class="hero-index" aria-hidden="true">JAMMIN' EXPRESS / SOUTH FLORIDA</span>
-  </section>
+<section class="hero" aria-labelledby="hero-title">
+ <div class="hero-picture"><img src="428615588_10168440660855565_6620285281218327242_n.jpg" alt="Guests and a Jammin Express entertainer celebrating on a lit dance floor" width="960" height="640" fetchpriority="high"></div>
+ <div class="hero-shade"></div>
+ <div class="shell hero-layout">
+  <p class="micro hero-kicker"><span class="micro-line"></span> SOUTH FLORIDA / EST. 1993</p>
+  <h1 id="hero-title" data-split>Event<br>entertainment<span class="hero-period">.</span></h1>
+  <div class="hero-description"><p>Experienced DJs, MCs, party motivators, and production for mitzvahs, weddings, and private events.</p><a href="events.html" class="button button-light">EXPLORE EVENTS <span>↗</span></a></div>
+ </div>
+ <div class="hero-bottom shell"><span>JAMMIN' EXPRESS ENTERTAINMENT</span><a href="#intro">SCROLL TO EXPLORE <span>↓</span></a></div>
+</section>
 
-  <section class="introduction section-pad" id="intro" aria-labelledby="intro-title">
-    <div class="container introduction-grid">
-      <div class="introduction-heading reveal">
-        <p class="eyebrow"><span class="eyebrow-line"></span> JAMMIN' EXPRESS</p>
-        <h2 id="intro-title" class="display-title">Every event is different.<br><em>We plan for that.</em></h2>
-      </div>
-      <div class="introduction-copy reveal">
-        <p>For over 30 years, we've helped South Florida families, couples and organizations bring their events to life. Our focus is simple: understand your guests, build the right entertainment, and make every detail feel considered.</p>
-        <a class="text-link" href="#about">ABOUT OUR COMPANY <span aria-hidden="true">↗</span></a>
-      </div>
-    </div>
-  </section>
+<section class="intro section-pad" id="intro">
+ <div class="shell intro-layout">
+  <div class="intro-left" data-reveal><span class="micro micro-dark"><span class="micro-line"></span> THE COMPANY</span><p class="intro-index">01 / 05</p></div>
+  <div class="intro-right"><h2 class="section-display" data-reveal>Thirty years of experience.<br><em>Every event is different.</em></h2><div class="intro-bottom" data-reveal><p>For more than three decades, Jammin' Express has helped South Florida families and organizations plan event entertainment around their guests, their vision, and their venue.</p><a class="underlink" href="about.html">ABOUT JAMMIN' EXPRESS <span>↗</span></a></div></div>
+ </div>
+</section>
 
-  <section class="events section-pad" id="events" aria-labelledby="events-title">
-    <div class="container">
-      <div class="section-heading reveal">
-        <div><p class="eyebrow"><span class="eyebrow-line"></span> WHAT WE CELEBRATE</p><h2 id="events-title" class="display-title">Events.</h2></div>
-        <p>Entertainment tailored to the people and the occasion.</p>
-      </div>
-      <div class="event-grid">
-        <a class="event-card event-card-feature reveal" href="#contact" data-occasion="Bar or Bat Mitzvah" aria-label="Inquire about Bar and Bat Mitzvah entertainment">
-          <img src="345046887_630625528951706_7786142091999887708_n.jpg" alt="MC celebrating with a young guest at a mitzvah" width="960" height="640" loading="lazy">
-          <span class="event-card-top">01 / CELEBRATIONS</span>
-          <span class="event-card-label"><strong>Bar &amp; Bat<br>Mitzvahs</strong><span class="card-arrow" aria-hidden="true">↗</span></span>
-        </a>
-        <a class="event-card reveal" href="#contact" data-occasion="Wedding" aria-label="Inquire about wedding entertainment">
-          <img src="481127899_1169647545171679_7969779054631407622_n.jpg" alt="Guests dancing together during an event" width="960" height="640" loading="lazy">
-          <span class="event-card-top">02 / CELEBRATIONS</span>
-          <span class="event-card-label"><strong>Weddings</strong><span class="card-arrow" aria-hidden="true">↗</span></span>
-        </a>
-        <a class="event-card reveal" href="#contact" data-occasion="Special event" aria-label="Inquire about special-event entertainment">
-          <img src="469487141_1232149074561451_1690567825430749902_n.jpg" alt="Crowd dancing under event lighting" width="960" height="640" loading="lazy">
-          <span class="event-card-top">03 / CELEBRATIONS</span>
-          <span class="event-card-label"><strong>Private &amp;<br>Corporate</strong><span class="card-arrow" aria-hidden="true">↗</span></span>
-        </a>
-        <a class="event-card event-card-wide reveal" href="#contact" data-occasion="Game show" aria-label="Inquire about interactive game shows">
-          <img src="41083569_2394786363918670_7392241394816909312_o - Copy.jpg" alt="Guests participating in a group game at a celebration" width="960" height="640" loading="lazy">
-          <span class="event-card-top">04 / INTERACTIVE</span>
-          <span class="event-card-label"><strong>Game Shows</strong><span class="card-arrow" aria-hidden="true">↗</span></span>
-        </a>
-      </div>
-      <p class="events-note">Also available for Sweet 16s, quinceañeras, school functions and holiday events.</p>
-    </div>
-  </section>
-
-  <section class="services section-pad" id="services" aria-labelledby="services-title">
-    <div class="container">
-      <div class="section-heading section-heading-dark reveal">
-        <div><p class="eyebrow eyebrow-light"><span class="eyebrow-line"></span> WHAT WE PROVIDE</p><h2 id="services-title" class="display-title">The right team.<br>For your event.</h2></div>
-        <p>Our entertainment options can be combined to suit your venue, guests and plans.</p>
-      </div>
-      <div class="services-layout">
-        <div class="services-list reveal" role="group" aria-label="Entertainment services">
-          <button class="service-tab is-active" type="button" aria-pressed="true" data-image="30-jammin-express-so-you-by-erica-sue-ES3_4951.jpg" data-alt="Jammin' Express MC holding a microphone" data-caption="HOSTING & MUSIC">
-            <span class="service-number">01</span><span class="service-body"><strong>DJs &amp; MCs</strong><small>Music, announcements and experienced hosting.</small></span><span class="service-arrow" aria-hidden="true">↗</span>
-          </button>
-          <button class="service-tab" type="button" aria-pressed="false" data-image="345046887_630625528951706_7786142091999887708_n.jpg" data-alt="MC celebrating alongside a young guest" data-caption="INTERACTIVE ENTERTAINMENT">
-            <span class="service-number">02</span><span class="service-body"><strong>Party Motivators</strong><small>Professional entertainers who engage the room.</small></span><span class="service-arrow" aria-hidden="true">↗</span>
-          </button>
-          <button class="service-tab" type="button" aria-pressed="false" data-image="41083569_2394786363918670_7392241394816909312_o - Copy.jpg" data-alt="Guests taking part in an interactive event game" data-caption="PARTICIPATION & GAMES">
-            <span class="service-number">03</span><span class="service-body"><strong>Interactive Games</strong><small>Group trivia, face-offs and custom activities.</small></span><span class="service-arrow" aria-hidden="true">↗</span>
-          </button>
-          <button class="service-tab" type="button" aria-pressed="false" data-image="469139946_1232149034561455_5594677380662890586_n.jpg" data-alt="Professional event lighting surrounding a dance floor" data-caption="PRODUCTION & LIGHTING">
-            <span class="service-number">04</span><span class="service-body"><strong>Event Production</strong><small>Lighting, enhancements and video options.</small></span><span class="service-arrow" aria-hidden="true">↗</span>
-          </button>
-          <a class="text-link text-link-light" href="#contact">DISCUSS YOUR EVENT <span aria-hidden="true">↗</span></a>
-        </div>
-        <figure class="services-photo reveal">
-          <img id="service-image" src="30-jammin-express-so-you-by-erica-sue-ES3_4951.jpg" alt="Jammin' Express MC holding a microphone" width="650" height="960" loading="lazy">
-          <figcaption id="service-caption">HOSTING &amp; MUSIC</figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
-
-  <section class="gallery section-pad" id="gallery" aria-labelledby="gallery-title">
-    <div class="container">
-      <div class="section-heading reveal">
-        <div><p class="eyebrow"><span class="eyebrow-line"></span> SELECTED MOMENTS</p><h2 id="gallery-title" class="display-title">Gallery.</h2></div>
-        <p>Photographs from Jammin' Express events.</p>
-      </div>
-      <div class="gallery-grid">
-        <button class="gallery-shot gallery-shot-large reveal" type="button" aria-label="Open event photograph 1">
-          <img src="428615588_10168440660855565_6620285281218327242_n.jpg" alt="Guests dancing together on a glowing dance floor" loading="lazy" width="960" height="640"><span aria-hidden="true">EXPAND ↗</span>
-        </button>
-        <button class="gallery-shot reveal" type="button" aria-label="Open event photograph 2">
-          <img src="32-jammin-express-so-you-by-erica-sue-ES3_4954.jpg" alt="Jammin' Express entertainer smiling with a microphone" loading="lazy" width="650" height="960"><span aria-hidden="true">EXPAND ↗</span>
-        </button>
-        <button class="gallery-shot reveal" type="button" aria-label="Open event photograph 3">
-          <img src="469139946_1232149034561455_5594677380662890586_n.jpg" alt="Dance floor and vibrant digital lighting" loading="lazy" width="960" height="640"><span aria-hidden="true">EXPAND ↗</span>
-        </button>
-        <button class="gallery-shot reveal" type="button" aria-label="Open event photograph 4">
-          <img src="33-jammin-express-so-you-by-erica-sue-ES3_4956.jpg" alt="Guests enjoying a celebration" loading="lazy" width="650" height="960"><span aria-hidden="true">EXPAND ↗</span>
-        </button>
-        <button class="gallery-shot reveal" type="button" aria-label="Open event photograph 5">
-          <img src="469487141_1232149074561451_1690567825430749902_n.jpg" alt="Guests waving light sticks on a crowded dance floor" loading="lazy" width="960" height="640"><span aria-hidden="true">EXPAND ↗</span>
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <section class="about section-pad" id="about" aria-labelledby="about-title">
-    <div class="container about-grid">
-      <div class="about-photo reveal"><img src="30-jammin-express-so-you-by-erica-sue-ES3_4951.jpg" alt="Jammin' Express entertainer with microphone at an event" loading="lazy" width="650" height="960"></div>
-      <div class="about-copy reveal">
-        <p class="eyebrow"><span class="eyebrow-line"></span> ESTABLISHED 1993</p>
-        <h2 id="about-title" class="display-title">Experience you<br>can count on.</h2>
-        <p>Jammin' Express is a Weston-based entertainment company serving South Florida. Since 1993, we've worked with families and event hosts to create personalized celebrations.</p>
-        <p>From music and hosting to interactive entertainment, we take a hands-on approach to planning and coordinating the entertainment for your event.</p>
-        <a class="text-link" href="#contact">GET IN TOUCH <span aria-hidden="true">↗</span></a>
-      </div>
-    </div>
-  </section>
-
-  <section class="reviews section-pad" aria-labelledby="reviews-title">
-    <div class="container">
-      <div class="section-heading reveal">
-        <div><p class="eyebrow"><span class="eyebrow-line"></span> CLIENT FEEDBACK</p><h2 id="reviews-title" class="display-title">Testimonials.</h2></div>
-      </div>
-      <div class="reviews-grid">
-        <figure class="review reveal"><span class="review-quote" aria-hidden="true">“</span><blockquote>The dance floor was never empty.</blockquote><figcaption>JANET GUTARRA <span>WEDDING</span></figcaption></figure>
-        <figure class="review reveal"><span class="review-quote" aria-hidden="true">“</span><blockquote>A+ entertainment!</blockquote><figcaption>SHAKARA ROSENBAUM <span>BAT MITZVAH</span></figcaption></figure>
-        <figure class="review reveal"><span class="review-quote" aria-hidden="true">“</span><blockquote>Hiring you was one of the best decisions we made.</blockquote><figcaption>CINDY &amp; DAVID SELTZER <span>BAT MITZVAH</span></figcaption></figure>
-      </div>
-    </div>
-  </section>
-
-  <section class="contact section-pad" id="contact" aria-labelledby="contact-title">
-    <div class="container contact-grid">
-      <div class="contact-info reveal">
-        <p class="eyebrow eyebrow-light"><span class="eyebrow-line"></span> INQUIRIES</p>
-        <h2 id="contact-title" class="display-title">Let's discuss<br>your event.</h2>
-        <p>Tell us the occasion, date and what you have in mind. We'll help you explore the right entertainment options.</p>
-        <div class="contact-methods">
-          <a href="tel:+19546593472"><small>PHONE</small><strong>(954) 659-3472 <span aria-hidden="true">↗</span></strong></a>
-          <a href="mailto:jason@jamminexpress.com"><small>EMAIL</small><strong>jason@jamminexpress.com <span aria-hidden="true">↗</span></strong></a>
-          <span>WESTON, FLORIDA · SERVING SOUTH FLORIDA</span>
-        </div>
-      </div>
-      <form id="contact-form" class="contact-form reveal">
-        <h3>Event inquiry</h3>
-        <p class="form-intro">A few details to get started.</p>
-        <div class="form-pair">
-          <label for="name">NAME <span>*</span><input id="name" name="name" autocomplete="name" type="text" maxlength="100" placeholder="Your name" required></label>
-          <label for="email">EMAIL <span>*</span><input id="email" name="email" autocomplete="email" type="email" maxlength="200" placeholder="you@example.com" required></label>
-        </div>
-        <div class="form-pair">
-          <label for="phone">PHONE<input id="phone" name="phone" autocomplete="tel" type="tel" maxlength="40" placeholder="Phone number"></label>
-          <label for="date">DATE<input id="date" name="date" type="date"></label>
-        </div>
-        <label for="occasion">EVENT TYPE <span>*</span><select id="occasion" name="occasion" required><option value="" disabled selected>Select event type</option><option>Bar or Bat Mitzvah</option><option>Wedding</option><option>Special event</option><option>Game show</option><option>Corporate or holiday event</option><option>Sweet 16 or Quinceañera</option><option>Other celebration</option></select></label>
-        <label for="message">ADDITIONAL DETAILS<textarea id="message" name="message" rows="3" maxlength="2000" placeholder="Venue, number of guests or anything else you'd like us to know."></textarea></label>
-        <button class="button button-dark form-submit" type="submit">PREPARE AN EMAIL <span aria-hidden="true">↗</span></button>
-        <p class="form-status" id="form-status" role="status">Your mail app will open with a prepared message. Review it and press Send to submit your inquiry.</p>
-      </form>
-    </div>
-  </section>
-</main>
-
-<footer class="footer">
-  <div class="container">
-    <div class="footer-top">
-      <a class="brand footer-brand" href="#top" aria-label="Jammin' Express Entertainment homepage">
-        <img src="logo.png" alt="" width="201" height="161" loading="lazy">
-        <span><strong>jammin'<br>express</strong><small>ENTERTAINMENT</small></span>
-      </a>
-      <p>South Florida event entertainment since 1993.</p>
-      <a href="#top" class="footer-up">BACK TO TOP ↑</a>
-    </div>
-    <div class="footer-bottom"><span>© <span id="year">2026</span> JAMMIN' EXPRESS ENTERTAINMENT, INC.</span><span>WESTON, FLORIDA</span><a href="mailto:jason@jamminexpress.com">CONTACT ↗</a></div>
+<section class="scroll-showcase" id="events" aria-labelledby="showcase-title">
+ <div class="showcase-heading shell" data-reveal><span class="micro micro-dark"><span class="micro-line"></span> EVENTS / 01—04</span><h2 id="showcase-title" class="section-display">What we do.</h2><a class="underlink" href="events.html">ALL EVENT TYPES <span>↗</span></a></div>
+ <div class="showcase-viewport">
+  <div class="showcase-track">
+   <a href="mitzvahs.html" class="showcase-card"><img src="345046887_630625528951706_7786142091999887708_n.jpg" alt="Mitzvah guest with event MC and a celebrating crowd" width="960" height="640" loading="lazy"><div class="showcase-card-meta"><span>01 / EVENTS</span><span>EXPLORE ↗</span></div><h3>Bar &amp; Bat<br>Mitzvahs</h3></a>
+   <a href="weddings.html" class="showcase-card"><img src="481127899_1169647545171679_7969779054631407622_n.jpg" alt="Guests gathered for a celebration" width="960" height="640" loading="lazy"><div class="showcase-card-meta"><span>02 / EVENTS</span><span>EXPLORE ↗</span></div><h3>Weddings</h3></a>
+   <a href="special-events.html" class="showcase-card"><img src="469487141_1232149074561451_1690567825430749902_n.jpg" alt="Guests dancing under production lighting" width="960" height="640" loading="lazy"><div class="showcase-card-meta"><span>03 / EVENTS</span><span>EXPLORE ↗</span></div><h3>Private &amp;<br>Corporate</h3></a>
+   <a href="game-shows.html" class="showcase-card"><img src="41083569_2394786363918670_7392241394816909312_o - Copy.jpg" alt="Guests participating in a group entertainment game" width="960" height="640" loading="lazy"><div class="showcase-card-meta"><span>04 / EVENTS</span><span>EXPLORE ↗</span></div><h3>Game Shows</h3></a>
   </div>
-</footer>
+ </div>
+ <div class="showcase-foot shell"><span>EXPLORE OUR EVENTS</span><span class="showcase-line"><i></i></span><span>04 CATEGORIES</span></div>
+</section>
 
-<div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Event photo gallery" aria-hidden="true">
-  <button id="lightbox-close" class="lightbox-close" type="button" aria-label="Close photo viewer">✕</button>
-  <button id="lightbox-prev" class="lightbox-prev" type="button" aria-label="Previous photograph">←</button>
-  <img id="lightbox-image" alt="Event photograph">
-  <button id="lightbox-next" class="lightbox-next" type="button" aria-label="Next photograph">→</button>
-  <span id="lightbox-count" class="lightbox-count">01 / 05</span>
-</div>
-<a class="mobile-cta" href="#contact">PLAN AN EVENT <span aria-hidden="true">↗</span></a>
-</body>
-</html>
+<section class="expertise section-pad" id="services">
+ <div class="shell expertise-grid">
+  <div class="expertise-copy"><span class="micro micro-dark" data-reveal><span class="micro-line"></span> ENTERTAINMENT SERVICES</span><h2 class="section-display" data-reveal>From the first<br>song to the<br><em>final detail.</em></h2><p data-reveal>Music, hosting, interactive entertainment, and event production, planned as one coordinated experience.</p><a class="button button-ink" href="services.html" data-reveal>EXPLORE SERVICES <span>↗</span></a></div>
+  <div class="expertise-photo image-reveal" data-reveal><img src="30-jammin-express-so-you-by-erica-sue-ES3_4951.jpg" alt="Jammin Express entertainer speaking into a microphone" width="650" height="960" loading="lazy"><span class="image-credit">JAMMIN' EXPRESS / ENTERTAINMENT</span></div>
+ </div>
+ <div class="shell expertise-links"><a href="services.html#djs">DJs &amp; MCs <span>↗</span></a><a href="services.html#motivators">Party Motivators <span>↗</span></a><a href="game-shows.html">Interactive Games <span>↗</span></a><a href="videography.html">Videography <span>↗</span></a></div>
+</section>
+
+<section class="cinema" aria-label="Jammin Express event production">
+ <div class="cinema-picture"><img src="469139946_1232149034561455_5594677380662890586_n.jpg" alt="Colorful production lighting and guests on a dance floor" width="960" height="640" loading="lazy"></div>
+ <div class="cinema-shade"></div><div class="shell cinema-content"><span class="micro"><span class="micro-line"></span> SELECTED EVENTS</span><h2 data-reveal>See the work.</h2><a class="button button-light" href="gallery.html">VIEW GALLERY <span>↗</span></a></div>
+</section>
+
+<section class="feature-quote section-pad">
+ <div class="shell quote-layout">
+  <div><span class="micro micro-dark"><span class="micro-line"></span> CLIENT TESTIMONIAL</span><p class="quote-index">04 CLIENT STORIES</p></div>
+  <div><blockquote data-reveal>“Our guests had a great time thanks to their talents and enthusiasm.”</blockquote><div class="quote-bottom" data-reveal><span>SHAKARA ROSENBAUM · BAT MITZVAH</span><a class="underlink" href="testimonials.html">READ THE FULL TESTIMONIALS <span>↗</span></a></div></div>
+ </div>
+</section>
+
+<section class="closing" aria-labelledby="closing-title">
+ <div class="shell closing-inner" data-reveal><span class="micro micro-light"><span class="micro-line"></span> GET IN TOUCH</span><h2 id="closing-title">Planning an event?</h2><a href="contact.html" class="button button-light">CONTACT OUR TEAM <span>↗</span></a></div>
+</section>
+</main>
+<footer class="footer"><div class="shell">
+ <div class="footer-top">
+  <div><a href="index.html" class="footer-logo"><img src="logo.png" alt="" width="201" height="161"><span>JAMMIN' EXPRESS<br><small>ENTERTAINMENT</small></span></a><p>Event entertainment in South Florida since 1993.</p></div>
+  <div class="footer-links"><div><span>EXPLORE</span><a href="events.html">Events</a><a href="services.html">Entertainment</a><a href="gallery.html">Gallery</a><a href="testimonials.html">Testimonials</a></div><div><span>COMPANY</span><a href="about.html">About</a><a href="contact.html">Contact</a><a href="tel:+19546593472">(954) 659-3472</a><a href="mailto:jason@jamminexpress.com">Email us</a></div></div>
+ </div>
+ <div class="footer-bottom"><span>© <span class="current-year">2026</span> JAMMIN' EXPRESS ENTERTAINMENT, INC.</span><span>WESTON, FLORIDA</span><a href="#top">BACK TO TOP ↑</a></div>
+</div></footer>
+</body></html>
