@@ -414,3 +414,22 @@ h1,h2,h3,h4,p,figure,blockquote{margin:0}
  .showcase-track{transform:none!important;flex-wrap:wrap;width:100%}
  .showcase-card{width:45%;height:320px;break-inside:avoid}
 }
+
+
+/* Headline-specific typography: the emotional line is intentional, not a stock tagline. */
+.hero h1{max-width:1480px;text-wrap:balance}
+.hero-emphasis{display:inline-block;position:relative;color:#d3efff;font-weight:600;white-space:nowrap}
+.hero-emphasis::after{content:"";display:block;width:100%;height:1px;background:linear-gradient(90deg,#d3efff 0%,#d3efff60 72%,transparent 100%);margin-top:clamp(4px,.7vw,12px);transform-origin:left;opacity:.66}
+.hero-emphasis .hero-period{color:#9ad2f4}
+.hero-description>p{max-width:540px}
+.showcase-heading{align-items:flex-end}
+.showcase-heading .section-display{line-height:1.07}
+@media(min-width:761px) and (max-width:1150px){
+ .showcase-heading .section-display{font-size:clamp(2.75rem,4.7vw,5.2rem)}
+ .showcase-heading .underlink{font-size:.57rem}
+}
+@media(max-width:760px){
+ .hero h1{font-size:clamp(3.45rem,10.5vw,6.7rem);line-height:1.04}
+ .hero-emphasis{white-space:normal}
+ .showcase-heading .section-display{font-size:clamp(2.65rem,8.7vw,5.6rem)}
+}
