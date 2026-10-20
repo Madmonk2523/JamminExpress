@@ -574,3 +574,44 @@ button:disabled { opacity:.34;cursor:not-allowed; }
  .showcase-line i{transition:none}
  .editorial-photo img{transform:none!important}
 }
+
+
+/* Multi-page navigation and new event photo spreads */
+.breadcrumb-bar{background:#18252b;color:#b9c9cb;border-bottom:1px solid #ffffff18}
+.breadcrumb-inner{min-height:49px;display:flex;align-items:center;gap:13px;flex-wrap:wrap;padding-block:10px;font-size:.7rem;line-height:1.4;letter-spacing:.035em}
+.breadcrumb-inner a{color:#e0eaeb;transition:color .2s}
+.breadcrumb-inner a:hover{color:#9fd6f4;text-decoration:underline;text-underline-offset:4px}
+.breadcrumb-inner>span[aria-current="page"]{color:#9bcde8;font-weight:700}
+.breadcrumb-inner>span[aria-hidden="true"]{color:#6d8a98}
+.event-photo-band{background:#f7f8f6}
+.event-photo-band .section-head .underlink{align-self:flex-end;white-space:nowrap}
+.event-photo-band-grid{display:grid;grid-template-columns:1.22fr .78fr;gap:14px;align-items:stretch}
+.event-photo-band figure{margin:0;min-width:0;background:#d5e1e4;overflow:hidden}
+.event-photo-band-main{height:clamp(380px,45vw,650px)}
+.event-photo-band-detail{height:clamp(380px,45vw,650px)}
+.event-photo-band img{width:100%;height:100%;object-fit:cover;object-position:center;transition:transform .75s ease,filter .4s ease}
+.event-photo-band-main img{object-position:center 46%}
+.event-photo-band-detail img{object-position:center 38%}
+.event-photo-band figure:hover img{transform:scale(1.035);filter:saturate(1.05)}
+/* Touch and keyboard: avoid hover-only content or unreachable link targets */
+@media(hover:none){
+ .showcase-card:hover>img,.related-card:hover img,.gallery-item:hover img,.feature-media:hover img{transform:none}
+ .event-photo-band figure:hover img,.editorial-photo:hover img{transform:none;filter:none}
+}
+@media(max-width:980px){
+ .event-photo-band .section-head{align-items:start}
+ .event-photo-band-grid{gap:10px}
+ .event-photo-band-main,.event-photo-band-detail{height:clamp(330px,45vw,520px)}
+}
+@media(max-width:760px){
+ .breadcrumb-inner{min-height:45px;font-size:.65rem;gap:10px}
+ .event-photo-band .section-head .underlink{display:inline-flex;margin-top:23px}
+ .event-photo-band-grid{grid-template-columns:1fr;gap:10px}
+ .event-photo-band-main{height:clamp(330px,85vw,480px)}
+ .event-photo-band-detail{height:clamp(270px,65vw,380px)}
+ .showcase-foot{padding-bottom:4px}
+ .section-head>.underlink{margin-top:20px}
+}
+@media(prefers-reduced-motion:reduce){
+ .event-photo-band img{transform:none!important}
+}
