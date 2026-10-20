@@ -615,3 +615,134 @@ button:disabled { opacity:.34;cursor:not-allowed; }
 @media(prefers-reduced-motion:reduce){
  .event-photo-band img{transform:none!important}
 }
+
+
+/* FINAL SPACING + FLOW PASS — eliminate over-tall sections and empty reveal states */
+/* Stronger rhythm: generous where photography needs it, compact around copy. */
+:root{--section-y:clamp(68px,7.2vw,110px)}
+.section-pad{padding-block:var(--section-y)}
+.intro{padding-block:clamp(66px,7vw,104px)}
+.intro-layout{grid-template-columns:minmax(155px,.26fr) minmax(0,1fr);gap:clamp(22px,4.4vw,75px)}
+.intro-right h2{font-size:clamp(2.85rem,5.05vw,5.95rem);line-height:1.09}
+.intro-bottom{margin-top:clamp(24px,3vw,38px);padding-top:22px;align-items:center}
+.intro-left{justify-content:flex-start;gap:38px}
+.intro-index{font-size:.58rem;letter-spacing:.11em}
+.hero{height:clamp(620px,82svh,880px);min-height:620px}
+.hero-layout{padding-block:50px 78px}
+.hero h1{font-size:clamp(4rem,7.65vw,10.25rem);max-width:1200px}
+.hero-description{margin-top:clamp(24px,3.2vw,35px)}
+.scroll-showcase{padding-top:clamp(70px,7vw,110px);padding-bottom:clamp(42px,4vw,65px)}
+.showcase-heading{margin-bottom:clamp(25px,3.2vw,42px)}
+.showcase-card{height:clamp(325px,48svh,480px)}
+.showcase-foot{margin-top:22px}
+.expertise{padding-block:clamp(70px,7.5vw,120px)}
+.expertise-grid{grid-template-columns:minmax(0,1fr) minmax(0,.92fr);gap:clamp(30px,6vw,95px)}
+.expertise-copy h2{font-size:clamp(3.1rem,5.2vw,6.5rem)}
+.expertise-copy>p{margin-top:clamp(22px,2.8vw,33px)}
+.expertise-photo{height:clamp(380px,39vw,570px)}
+.expertise-links{margin-top:clamp(45px,5vw,80px)}
+.cinema{height:clamp(430px,64svh,660px)}
+.cinema h2{font-size:clamp(4rem,7.3vw,9rem)}
+.editorial-photos{padding-block:clamp(68px,7.2vw,118px)}
+.editorial-heading{margin-bottom:clamp(25px,3.3vw,42px)}
+.editorial-grid{grid-template-rows:clamp(220px,22vw,330px) clamp(220px,22vw,330px)}
+.feature-quote{padding-block:clamp(68px,7vw,110px)}
+.quote-layout{grid-template-columns:minmax(150px,.26fr) minmax(0,1fr);gap:clamp(30px,5vw,90px)}
+.feature-quote blockquote{font-size:clamp(2.1rem,3.55vw,4.2rem);line-height:1.26}
+.quote-bottom{margin-top:28px}
+.quote-index{margin-top:26px}
+.closing{padding-block:clamp(77px,8vw,127px)}
+.closing-inner{gap:18px}
+.closing h2{font-size:clamp(3.2rem,6.3vw,8rem)}
+/* Inner pages: avoid 1,000px-tall introductions followed by huge top margins. */
+.page-hero-grid{min-height:clamp(500px,66svh,700px);gap:clamp(24px,5vw,82px);padding-block:clamp(44px,6vw,72px)}
+.page-hero-visual{height:clamp(360px,35vw,520px)}
+.page-hero-copy .micro{margin-bottom:clamp(17px,3vw,32px)}
+.page-hero-copy>p{margin-top:clamp(20px,3vw,30px)}
+.page-hero h1{font-size:clamp(3.2rem,5.5vw,6.75rem);line-height:1.065}
+.page-intro .prose{margin-top:clamp(22px,3vw,31px)}
+.page-intro .section-display{font-size:clamp(2.8rem,4.8vw,5.9rem)}
+.section-head{margin-bottom:clamp(28px,4vw,45px)}
+.feature-row{padding-block:clamp(38px,5.2vw,76px);gap:clamp(30px,6vw,92px)}
+.feature-media{height:clamp(350px,34vw,520px)}
+.feature-copy .micro{margin-bottom:20px}
+.feature-copy h2{font-size:clamp(2.4rem,3.55vw,4.8rem)}
+.feature-copy p{margin-top:18px}
+.detail-card{min-height:205px;padding:clamp(23px,2.7vw,35px)}
+.detail-card h3{margin-top:20px}
+.option-card{min-height:190px;padding:clamp(24px,2.7vw,35px);gap:13px}
+.related-card{height:clamp(250px,28vw,330px)}
+.related-grid{margin-top:clamp(28px,4vw,42px)}
+.faq-grid{gap:clamp(35px,6vw,80px)}
+.event-photo-band-main,.event-photo-band-detail{height:clamp(340px,36vw,510px)}
+.testimonial-item{padding-block:clamp(35px,4vw,66px)}
+.testimonial-item blockquote{font-size:clamp(1.18rem,1.7vw,1.95rem);line-height:1.62}
+.footer{padding-top:clamp(46px,6vw,77px)}
+.footer-top{padding-bottom:clamp(40px,5vw,70px)}
+/* Gallery grid should never leave accidental empty masonry cells. */
+.gallery-masonry{grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-flow:row dense;align-items:stretch}
+.gallery-item{height:clamp(245px,25vw,370px);min-width:0}
+.gallery-item:nth-child(6n+1){grid-row:auto;height:clamp(245px,25vw,370px)}
+.gallery-item:nth-child(9n+1){grid-column:span 2}
+.gallery-item[hidden]{display:none!important}
+/* The entrance effect is always an enhancement. Nothing on the page starts hidden. */
+[data-reveal],.gallery-item,.related-card,.detail-card,.option-card{opacity:1!important;visibility:visible!important}
+.motion-fallback [data-reveal]{opacity:1!important;transform:none!important}
+@media(max-width:980px){
+ .page-hero-grid{min-height:0}
+ .page-hero-visual{height:clamp(360px,42vw,520px)}
+ .hero{height:clamp(570px,78svh,760px);min-height:570px}
+ .expertise-photo{height:clamp(370px,45vw,520px)}
+ .intro-layout{grid-template-columns:minmax(125px,.22fr) minmax(0,1fr);gap:28px}
+}
+@media(max-width:760px){
+ :root{--section-y:clamp(54px,9vw,77px)}
+ .section-pad{padding-block:var(--section-y)}
+ .hero{min-height:0;height:auto;min-height:clamp(520px,87svh,700px)}
+ .hero-layout{padding-block:clamp(65px,11vw,90px) 92px}
+ .hero h1{font-size:clamp(3rem,10vw,6rem)}
+ .intro-layout,.quote-layout{display:block}
+ .intro-left{margin-bottom:20px}
+ .intro-index,.quote-index{display:none}
+ .intro-right h2{font-size:clamp(2.85rem,8.5vw,5.4rem)}
+ .intro-bottom{margin-top:26px}
+ .scroll-showcase{padding-block:clamp(56px,9vw,80px) 44px}
+ .showcase-card{height:clamp(310px,52svh,415px);width:min(81vw,470px)}
+ .showcase-heading{margin-bottom:25px}
+ .expertise{padding-block:var(--section-y)}
+ .expertise-grid{display:grid;grid-template-columns:1fr;gap:32px}
+ .expertise-photo{height:clamp(380px,94vw,520px)}
+ .expertise-links{margin-top:42px}
+ .cinema{height:clamp(390px,64svh,520px)}
+ .cinema h2{font-size:clamp(3.4rem,10.8vw,6.2rem)}
+ .editorial-photos,.feature-quote{padding-block:var(--section-y)}
+ .editorial-grid{grid-template-rows:clamp(220px,66vw,390px) clamp(150px,43vw,260px)}
+ .feature-quote blockquote{font-size:clamp(1.85rem,6.3vw,3.2rem)}
+ .quote-bottom{margin-top:27px}
+ .closing{padding-block:clamp(70px,10vw,98px)}
+ .page-hero-grid{min-height:0;padding-block:clamp(45px,7vw,68px);gap:30px}
+ .page-hero-visual{height:clamp(280px,80vw,470px)}
+ .page-hero h1{font-size:clamp(2.9rem,9vw,5.7rem)}
+ .page-intro-grid{gap:17px}
+ .feature-row{gap:22px;padding-block:clamp(32px,6vw,55px)}
+ .feature-media{height:clamp(300px,75vw,450px)}
+ .feature-row.reverse .feature-media{order:0}
+ .feature-row.reverse .feature-copy{order:1}
+ .related-card{height:clamp(230px,62vw,320px)}
+ .gallery-masonry{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .gallery-item,.gallery-item:nth-child(6n+1){height:clamp(195px,43vw,280px)}
+ .gallery-item:nth-child(9n+1){grid-column:span 2}
+ .event-photo-band-main{height:clamp(290px,70vw,420px)}
+ .event-photo-band-detail{height:clamp(220px,55vw,350px)}
+}
+@media(max-width:430px){
+ .hero{min-height:clamp(510px,84svh,650px)}
+ .hero h1{font-size:clamp(2.7rem,9.3vw,4.2rem)}
+ .showcase-card{height:clamp(300px,49svh,385px)}
+ .feature-quote blockquote{font-size:clamp(1.7rem,6.8vw,2.8rem)}
+ .gallery-masonry{grid-template-columns:1fr}
+ .gallery-item,.gallery-item:nth-child(6n+1){height:290px;grid-column:1}
+}
+@media(prefers-reduced-motion:reduce){
+ [data-reveal],.gallery-item,.related-card,.detail-card,.option-card{transform:none!important}
+}
