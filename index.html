@@ -53,7 +53,7 @@
 
 <section class="scroll-showcase" id="events" aria-labelledby="showcase-title">
  <div class="showcase-heading shell" data-reveal><span class="micro micro-dark"><span class="micro-line"></span> OCCASIONS / 01—04</span><h2 id="showcase-title" class="section-display">What's the<br>occasion?</h2><a class="underlink" href="events.html">EXPLORE ALL EVENTS <span>↗</span></a></div>
- <div class="showcase-viewport">
+ <div class="showcase-viewport" id="event-carousel" role="region" aria-roledescription="carousel" aria-label="Jammin Express event categories" tabindex="0">
   <div class="showcase-track">
    <a href="mitzvahs.html" class="showcase-card"><img src="345046887_630625528951706_7786142091999887708_n.jpg" alt="Mitzvah guest with event MC and a celebrating crowd" width="960" height="640" loading="lazy"><div class="showcase-card-meta"><span>01 / EVENTS</span><span>EXPLORE ↗</span></div><h3>Bar &amp; Bat<br>Mitzvahs</h3></a>
    <a href="weddings.html" class="showcase-card"><img src="481127899_1169647545171679_7969779054631407622_n.jpg" alt="Guests gathered for a celebration" width="960" height="640" loading="lazy"><div class="showcase-card-meta"><span>02 / EVENTS</span><span>EXPLORE ↗</span></div><h3>Weddings</h3></a>
@@ -61,7 +61,7 @@
    <a href="game-shows.html" class="showcase-card"><img src="41083569_2394786363918670_7392241394816909312_o - Copy.jpg" alt="Guests participating in a group entertainment game" width="960" height="640" loading="lazy"><div class="showcase-card-meta"><span>04 / EVENTS</span><span>EXPLORE ↗</span></div><h3>Game Shows</h3></a>
   </div>
  </div>
- <div class="showcase-foot shell"><span>EXPLORE OUR EVENTS</span><span class="showcase-line"><i></i></span><span>04 CATEGORIES</span></div>
+ <div class="showcase-foot shell"><span>SWIPE OR USE THE ARROWS TO EXPLORE</span><span class="showcase-line" aria-hidden="true"><i></i></span><div class="showcase-controls"><span class="showcase-counter" id="showcase-counter" aria-live="polite">01 / 04</span><button class="showcase-button" id="showcase-prev" type="button" aria-label="Previous event" aria-controls="event-carousel">←</button><button class="showcase-button" id="showcase-next" type="button" aria-label="Next event" aria-controls="event-carousel">→</button></div></div>
 </section>
 
 <section class="expertise section-pad" id="services">
@@ -75,6 +75,15 @@
 <section class="cinema" aria-label="Jammin Express event production">
  <div class="cinema-picture"><img src="469139946_1232149034561455_5594677380662890586_n.jpg" alt="Colorful production lighting and guests on a dance floor" width="960" height="640" loading="lazy"></div>
  <div class="cinema-shade"></div><div class="shell cinema-content"><span class="micro"><span class="micro-line"></span> FROM OUR EVENTS</span><h2 data-reveal>See it<br>for yourself.</h2><a class="button button-light" href="gallery.html">BROWSE EVENT PHOTOS <span>↗</span></a></div>
+</section>
+
+<section class="editorial-photos section-pad" aria-labelledby="photos-title">
+ <div class="shell editorial-heading" data-reveal><div><span class="micro micro-dark"><span class="micro-line"></span> THE PHOTO ARCHIVE</span><h2 class="section-display" id="photos-title">The celebration,<br><em>up close.</em></h2></div><a class="underlink" href="gallery.html">VIEW MORE PHOTOS <span aria-hidden="true">↗</span></a></div>
+ <div class="shell editorial-grid">
+  <figure class="editorial-photo editorial-photo--tall" data-reveal><img src="0546_WendyJStudios.jpg" alt="Guests enjoying a Jammin Express event" loading="lazy" decoding="async" width="960" height="1280"><figcaption>THE PEOPLE</figcaption></figure>
+  <figure class="editorial-photo editorial-photo--landscape" data-reveal><img src="375027021_290486977066578_7386363872688679825_n.jpg" alt="A Jammin Express celebration in progress" loading="lazy" decoding="async" width="960" height="640"><figcaption>THE EVENT</figcaption></figure>
+  <figure class="editorial-photo editorial-photo--small" data-reveal><img src="40803337_1864669360294827_4812187229382246400_o - Copy.jpg" alt="Jammin Express host addressing guests during a celebration" loading="lazy" decoding="async" width="960" height="640"><figcaption>THE HOST</figcaption></figure>
+ </div>
 </section>
 
 <section class="feature-quote section-pad">
