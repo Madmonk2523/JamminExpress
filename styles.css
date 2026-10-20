@@ -77,9 +77,11 @@ h1,h2,h3,h4,p,figure,blockquote{margin:0}
 .showcase-heading{display:flex;align-items:flex-end;gap:25px;justify-content:space-between;margin-bottom:44px}
 .showcase-heading .section-display{font-size:clamp(2.8rem,5vw,6rem)}
 .showcase-heading .underlink{white-space:nowrap}
-.showcase-viewport{overflow:hidden}
+.showcase-viewport{overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.showcase-viewport::-webkit-scrollbar{display:none}
+.scroll-showcase.is-pinned .showcase-viewport{overflow:hidden;scroll-snap-type:none}
 .showcase-track{display:flex;width:max-content;padding-left:var(--space);padding-right:var(--space);gap:18px;will-change:transform}
-.showcase-card{width:clamp(460px,59vw,940px);height:clamp(425px,63vh,680px);position:relative;isolation:isolate;display:flex;align-items:flex-end;overflow:hidden;background:#14232b;color:white;padding:35px}
+.showcase-card{width:clamp(460px,59vw,940px);height:clamp(425px,63vh,680px);position:relative;isolation:isolate;display:flex;align-items:flex-end;overflow:hidden;background:#14232b;color:white;padding:35px;scroll-snap-align:start}
 .showcase-card>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-3;transition:transform 1s cubic-bezier(.16,.74,.2,1)}
 .showcase-card:after{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(0deg,#07121edb,#07121e0c 80%)}
 .showcase-card:hover img{transform:scale(1.055)}
@@ -395,4 +397,20 @@ h1,h2,h3,h4,p,figure,blockquote{margin:0}
  html{scroll-behavior:auto}
  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
  .showcase-track{transform:none!important}
+}
+/* Polished route changes in modern browsers; graceful fallback elsewhere */
+@view-transition{navigation:auto}
+::view-transition-old(root){animation:fade-out .22s ease forwards}
+::view-transition-new(root){animation:fade-in .34s ease forwards}
+@keyframes fade-out{to{opacity:.45}}
+@keyframes fade-in{from{opacity:.3}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){
+ ::view-transition-old(root),::view-transition-new(root){animation:none}
+}
+/* Print-friendly and no-animation fallbacks */
+@media print{
+ .site-header,.scroll-meter,.mobile-cta,.menu-toggle,.closing,.showcase-foot{display:none!important}
+ .scroll-showcase,.showcase-viewport{overflow:visible}
+ .showcase-track{transform:none!important;flex-wrap:wrap;width:100%}
+ .showcase-card{width:45%;height:320px;break-inside:avoid}
 }
