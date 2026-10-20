@@ -433,3 +433,30 @@ h1,h2,h3,h4,p,figure,blockquote{margin:0}
  .hero-emphasis{white-space:normal}
  .showcase-heading .section-display{font-size:clamp(2.65rem,8.7vw,5.6rem)}
 }
+
+
+/* Responsive editorial headlines: allow real copy, not isolated words,
+   to determine the type scale on split-panel pages. */
+.page-hero h1{
+  font-size:clamp(3.35rem,5.7vw,7.5rem);
+  line-height:1.045;
+  letter-spacing:-.072em;
+  text-wrap:balance;
+  overflow-wrap:normal;
+}
+.hero h1{
+  font-size:clamp(4.2rem,7.6vw,9.6rem);
+  line-height:1.06;
+}
+.hero-emphasis{white-space:normal}
+@media(max-width:980px){
+  .page-hero h1{font-size:clamp(3.15rem,6.4vw,5.75rem)}
+}
+@media(max-width:760px){
+  .page-hero h1{font-size:clamp(2.65rem,8.7vw,5.7rem);line-height:1.075}
+  .hero h1{font-size:clamp(2.8rem,9.7vw,6.5rem)}
+}
+@media(max-width:430px){
+  .page-hero h1{font-size:clamp(2.3rem,9vw,3.25rem)}
+  .hero h1{font-size:clamp(2.35rem,9.3vw,4.1rem)}
+}
