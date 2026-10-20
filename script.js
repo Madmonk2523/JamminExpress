@@ -178,7 +178,7 @@
     function moveSlider(delta) {
       const nextIndex = Math.max(0,Math.min(eventCards.length-1,currentEvent()+delta));
       const target = eventCards[nextIndex].offsetLeft-eventCards[0].offsetLeft;
-      eventViewport.scrollTo({left:target,behavior:reduced?'instant':'smooth'});
+      eventViewport.scrollTo({left:target,behavior:reduced?'auto':'smooth'});
     }
     previous?.addEventListener('click', () => moveSlider(-1));
     next?.addEventListener('click', () => moveSlider(1));
@@ -216,83 +216,74 @@
     }
   });
 
-  // Native fallback if GSAP is blocked, absent or motion reduction is requested.
-  function fallbackReveal() {
-    if (reduced || !('IntersectionObserver' in window)) return;
-    document.documentElement.classList.add('motion-fallback');
-    const io = new IntersectionObserver(entries => entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        io.unobserve(entry.target);
-      }
-    }), {rootMargin:'0px 0px -28px 0px', threshold:0.05});
-    $$('[data-reveal]').forEach(el => io.observe(el));
+  // Progressive-enhancement motion: content is ALWAYS visible, even if the
+  // animation library fails, a user scrolls quickly, or the page is restored.
+  // Enter animations never set visibility:hidden or opacity:0 on page content.
+  if (reduced) return;
+
+  const fadeElements = $$('[data-reveal], .detail-card, .option-card, .related-card, .gallery-item');
+  if ('IntersectionObserver' in window) {
+    const seen = new WeakSet();
+    const entryObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting || seen.has(entry.target)) return;
+        seen.add(entry.target);
+        entryObserver.unobserve(entry.target);
+        // Translate & a tiny blur instead of hiding elements in blank sections.
+        if (entry.target.animate) entry.target.animate([
+          { transform:'translate3d(0, 18px, 0)', filter:'blur(1.5px)' },
+          { transform:'translate3d(0, 0, 0)', filter:'blur(0)' }
+        ], {duration:650,easing:'cubic-bezier(.2,.65,.2,1)',fill:'none'});
+      });
+    }, {rootMargin:'0px 0px -24px 0px',threshold:.07});
+    fadeElements.forEach(el => entryObserver.observe(el));
   }
-  if (reduced || !window.gsap || !window.ScrollTrigger) {
-    fallbackReveal(); return;
+
+  // Opening motion remains lightweight; never hides the hero on slow networks.
+  const heroHeading = $('.hero h1, .page-hero h1');
+  if (heroHeading?.animate) {
+    heroHeading.animate(
+      [{transform:'translate3d(0, 16px, 0)'},{transform:'translate3d(0,0,0)'}],
+      {duration:850,easing:'cubic-bezier(.18,.7,.2,1)'}
+    );
   }
+
+  // Only photography gets scroll-tied movement. Text, cards, galleries and
+  // section containers keep their natural layout positions and visibility.
+  if (!window.gsap || !window.ScrollTrigger) return;
   const gsap = window.gsap;
   const ScrollTrigger = window.ScrollTrigger;
   gsap.registerPlugin(ScrollTrigger);
-  // Load-in motion is intentionally limited to the first viewport.
-  const opening = gsap.timeline({defaults:{ease:'power3.out'}});
-  if ($('.hero')) {
-    opening.from('.hero-kicker',{opacity:0,y:18,duration:.7})
-      .from('.hero h1',{opacity:0,y:55,duration:1.1},'-=.35')
-      .from('.hero-description',{opacity:0,y:20,duration:.75},'-=.55');
-  } else if ($('.page-hero')) {
-    opening.from('.page-hero-copy .micro',{opacity:0,y:15,duration:.55})
-      .from('.page-hero h1',{opacity:0,y:40,duration:.9},'-=.25')
-      .from('.page-hero-copy>p',{opacity:0,y:17,duration:.75},'-=.5');
-  }
 
-  // Short, staggered content entrances; keep all text in the DOM and accessible.
-  $$('[data-reveal]').forEach(el => {
-    gsap.from(el, {
-      autoAlpha:0, y:36, duration:1.0, ease:'power3.out',
-      scrollTrigger:{trigger:el,start:'top 91%',once:true}
-    });
-  });
-
-  // Hero and subpage photography moves subtly at a different rate to the scroll.
-  const heroPhoto = $('.hero-picture img');
-  if (heroPhoto) gsap.fromTo(heroPhoto,{scale:1.12},{scale:1,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:1}});
-  $$('.page-hero-visual img, .cinema-picture img, .feature-media img').forEach(img => {
-    gsap.fromTo(img,{scale:1.12},{scale:1,ease:'none',scrollTrigger:{trigger:img.parentElement,start:'top bottom',end:'bottom top',scrub:1.2}});
-  });
-
-  // No pinned sideways-scroll section: it hid the lower edge on shorter displays.
-  // The carousel remains a real, native overflow region with explicit controls.
-  // Large-screen photographs elsewhere receive scroll-tied depth instead.
-  const photoMotion = gsap.matchMedia();
-  photoMotion.add('(min-width: 900px) and (min-height: 600px)', () => {
-    const animations = [];
-    $$('.editorial-photo img, .showcase-card img').forEach(img => {
-      const anim = gsap.fromTo(img,{scale:1.07,yPercent:-3},{
-        scale:1.12,yPercent:3,ease:'none',
-        scrollTrigger:{trigger:img.closest('figure, a'),start:'top bottom',end:'bottom top',scrub:1.2}
+  const motion = gsap.matchMedia();
+  motion.add('(min-width: 980px) and (min-height: 690px)', () => {
+    const tweens = [];
+    const addPhotoMotion = (selector, startScale=1.04, endScale=1.09) => {
+      $$(selector).forEach(img => {
+        const frame = img.parentElement;
+        if (!frame) return;
+        // Transform only the image so its frame never shifts or opens gaps.
+        const tween = gsap.fromTo(img, {scale:startScale}, {
+          scale:endScale, ease:'none',
+          scrollTrigger:{trigger:frame,start:'top bottom',end:'bottom top',scrub:1.15}
+        });
+        tweens.push(tween);
       });
-      animations.push(anim);
-    });
-    return () => animations.forEach(animation=>animation.kill());
+    };
+    addPhotoMotion('.hero-picture img',1.05,1.11);
+    addPhotoMotion('.page-hero-visual img',1.03,1.08);
+    addPhotoMotion('.cinema-picture img',1.04,1.10);
+    addPhotoMotion('.feature-media img',1.02,1.075);
+    addPhotoMotion('.editorial-photo img',1.02,1.08);
+    addPhotoMotion('.event-photo-band img',1.02,1.075);
+    return () => {
+      tweens.forEach(tween => tween.kill());
+      ScrollTrigger.refresh();
+    };
   });
 
-  // Stagger photo cards on dedicated pages rather than pinning everything.
-  $$('.related-card, .detail-card, .option-card, .gallery-item').forEach((el, i) => {
-    gsap.from(el, {
-      opacity:0,y:38,duration:.9,delay:(i%3)*.055,ease:'power2.out',
-      scrollTrigger:{trigger:el,start:'top 95%',once:true}
-    });
-  });
-
-  // Service sections have subtle photographic reveal, without hiding content on slow networks.
-  $$('.feature-media, .page-hero-visual, .expertise-photo').forEach(frame => {
-    gsap.fromTo(frame,{clipPath:'inset(0 0 8% 0)'},{
-      clipPath:'inset(0 0 0% 0)',ease:'power2.out',duration:1.25,
-      scrollTrigger:{trigger:frame,start:'top 88%',once:true}
-    });
-  });
-
+  // Refresh only after image dimensions are stable; geometry doesn't depend
+  // on successful external font or motion library downloads.
   window.addEventListener('load', () => ScrollTrigger.refresh(), {once:true});
   if (document.fonts?.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
 })();
