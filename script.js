@@ -1,190 +1,251 @@
-// Jammin' Express — focused interactions, no animation dependencies.
-const $ = (selector, scope=document) => scope.querySelector(selector);
-const $$ = (selector, scope=document) => [...scope.querySelectorAll(selector)];
-const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* Jammin' Express / motion & interaction framework */
+(() => {
+  'use strict';
+  const $ = (s, root = document) => root.querySelector(s);
+  const $$ = (s, root = document) => [...root.querySelectorAll(s)];
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const menu = $('#menu-toggle');
+  const nav = $('#main-nav');
+  const header = $('.site-header');
+  const progress = $('.scroll-meter > span');
+  const desktop = matchMedia('(min-width: 761px)');
+  let framePending = false;
 
-// Compact header
-const header = $('.site-header');
-const progress = $('#scroll-progress');
-let scrollFrame = null;
-function updateHeader() {
-  header.classList.toggle('is-scrolled', window.scrollY > 16);
-  const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-  progress.style.transform = `scaleX(${Math.min(1, Math.max(0, window.scrollY / max))})`;
-  scrollFrame = null;
-}
-updateHeader();
-window.addEventListener('scroll', () => {
-  if (scrollFrame === null) scrollFrame = window.requestAnimationFrame(updateHeader);
-}, {passive:true});
-
-// Accessible mobile menu
-const toggle = $('.nav-toggle');
-const nav = $('#site-nav');
-function closeMenu() {
-  nav.classList.remove('is-open');
-  toggle.setAttribute('aria-expanded', 'false');
-  toggle.setAttribute('aria-label', 'Open menu');
-  document.body.classList.remove('menu-open');
-}
-toggle.addEventListener('click', () => {
-  const next = toggle.getAttribute('aria-expanded') !== 'true';
-  nav.classList.toggle('is-open', next);
-  toggle.setAttribute('aria-expanded', String(next));
-  toggle.setAttribute('aria-label', next ? 'Close menu' : 'Open menu');
-  document.body.classList.toggle('menu-open', next);
-});
-$('#site-nav a').forEach(link => link.addEventListener('click', closeMenu));
-window.addEventListener('resize', () => {
-  if (window.innerWidth > 900) closeMenu();
-});
-
-// A single gentle scroll reveal; the page remains readable without it.
-if (!prefersReducedMotion && 'IntersectionObserver' in window) {
-  const observer = new IntersectionObserver((entries, currentObserver) => {
-    for (const entry of entries) {
-      if (!entry.isIntersecting) continue;
-      entry.target.classList.add('is-visible');
-      currentObserver.unobserve(entry.target);
-    }
-  }, {threshold:0.05, rootMargin:'0px 0px -16px 0px'});
-  $$('.reveal').forEach(item => observer.observe(item));
-  document.documentElement.classList.add('motion-ready');
-}
-
-
-// Crossfade service photography only after the replacement image is ready.
-const serviceImage = $('#service-image');
-const serviceCaption = $('#service-caption');
-let serviceSequence = 0;
-$('.service-tab').forEach(button => {
-  button.addEventListener('click', () => {
-    if (button.classList.contains('is-active')) return;
-    $('.service-tab').forEach(tab => {
-      const active = tab === button;
-      tab.classList.toggle('is-active', active);
-      tab.setAttribute('aria-pressed', String(active));
+  // Shared navigation and active-page state.
+  function closeMenu() {
+    if (!menu || !nav) return;
+    menu.setAttribute('aria-expanded', 'false');
+    menu.setAttribute('aria-label', 'Open navigation');
+    nav.classList.remove('is-open');
+    document.body.classList.remove('menu-open');
+  }
+  if (menu && nav) {
+    menu.addEventListener('click', () => {
+      const opening = menu.getAttribute('aria-expanded') !== 'true';
+      menu.setAttribute('aria-expanded', String(opening));
+      menu.setAttribute('aria-label', opening ? 'Close navigation' : 'Open navigation');
+      nav.classList.toggle('is-open', opening);
+      document.body.classList.toggle('menu-open', opening);
     });
-    const sequence = ++serviceSequence;
-    const next = new Image();
-    next.onload = () => {
-      if (sequence !== serviceSequence) return;
-      if (!prefersReducedMotion) serviceImage.style.opacity = '0';
-      const commit = () => {
-        if (sequence !== serviceSequence) return;
-        serviceImage.src = next.src;
-        serviceImage.alt = button.dataset.alt;
-        serviceCaption.textContent = button.dataset.caption;
-        serviceImage.style.opacity = '1';
-      };
-      if (prefersReducedMotion) commit();
-      else window.setTimeout(commit, 170);
-    };
-    next.onerror = () => { if (sequence === serviceSequence) serviceImage.style.opacity = '1'; };
-    next.src = button.dataset.image;
+    $$('a', nav).forEach(a => a.addEventListener('click', closeMenu));
+    window.addEventListener('resize', () => { if (innerWidth > 980) closeMenu(); });
+  }
+  const fileName = location.pathname.split('/').pop() || 'index.html';
+  $$('.nav-links a').forEach(a => {
+    const target = (a.getAttribute('href') || '').split('#')[0];
+    if (target && target === fileName) a.setAttribute('aria-current', 'page');
   });
-});
 
-const occasion = $('#occasion');
-$$('[data-occasion]').forEach(link => link.addEventListener('click', () => {
-  const choice = [...occasion.options].find(option => option.value === link.dataset.occasion);
-  if (choice) occasion.value = choice.value;
-}));
-
-// Simple accessible photo gallery
-const gallery = $$('.gallery-shot img').map(img => ({src:img.getAttribute('src'),alt:img.alt}));
-const lightbox = $('#lightbox');
-const lightboxImage = $('#lightbox-image');
-const lightboxCounter = $('#lightbox-count');
-const lightboxClose = $('#lightbox-close');
-const lightboxPrev = $('#lightbox-prev');
-const lightboxNext = $('#lightbox-next');
-let galleryIndex = 0;
-let lastFocus = null;
-function renderGallery() {
-  const photo = gallery[galleryIndex];
-  lightboxImage.src = photo.src;
-  lightboxImage.alt = photo.alt;
-  lightboxCounter.textContent = String(galleryIndex+1).padStart(2,'0')+' / '+String(gallery.length).padStart(2,'0');
-}
-function openGallery(index) {
-  galleryIndex=index;
-  lastFocus=document.activeElement;
-  renderGallery();
-  lightbox.classList.add('is-open');
-  lightbox.setAttribute('aria-hidden','false');
-  document.body.classList.add('lightbox-open');
-  lightboxClose.focus();
-}
-function closeGallery() {
-  if (!lightbox.classList.contains('is-open')) return;
-  lightbox.classList.remove('is-open');
-  lightbox.setAttribute('aria-hidden','true');
-  document.body.classList.remove('lightbox-open');
-  if (lastFocus && lastFocus.isConnected) lastFocus.focus();
-}
-function changeGallery(step) {
-  galleryIndex=(galleryIndex+step+gallery.length)%gallery.length;
-  renderGallery();
-}
-$$('.gallery-shot').forEach((button,index) => button.addEventListener('click', () => openGallery(index)));
-lightboxClose.addEventListener('click',closeGallery);
-lightboxPrev.addEventListener('click',()=>changeGallery(-1));
-lightboxNext.addEventListener('click',()=>changeGallery(1));
-lightbox.addEventListener('click',event=>{if(event.target===lightbox)closeGallery();});
-document.addEventListener('keydown',event=>{
-  if (event.key==='Escape') {
-    if (lightbox.classList.contains('is-open')) closeGallery();
-    else if (nav.classList.contains('is-open')) {closeMenu();toggle.focus();}
-    return;
+  // Avoid a full scroll event worth of DOM writes on every scroll.
+  function updateScroll() {
+    header?.classList.toggle('scrolled', scrollY > 20);
+    if (progress) {
+      const max = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+      progress.style.transform = 'scaleX(' + Math.max(0, Math.min(1, scrollY / max)) + ')';
+    }
+    framePending = false;
   }
-  if (!lightbox.classList.contains('is-open')) return;
-  if (event.key==='ArrowLeft') {changeGallery(-1);event.preventDefault();}
-  if (event.key==='ArrowRight') {changeGallery(1);event.preventDefault();}
-  if (event.key==='Tab') {
-    const buttons=[lightboxClose,lightboxPrev,lightboxNext];
-    const index=buttons.indexOf(document.activeElement);
-    if (event.shiftKey && index<=0) {buttons[buttons.length-1].focus();event.preventDefault();}
-    else if (!event.shiftKey && index===buttons.length-1) {buttons[0].focus();event.preventDefault();}
-    else if (index===-1) {lightboxClose.focus();event.preventDefault();}
+  updateScroll();
+  window.addEventListener('scroll', () => {
+    if (!framePending) { framePending = true; requestAnimationFrame(updateScroll); }
+  }, {passive:true});
+  window.addEventListener('resize', updateScroll, {passive:true});
+  $$('.current-year').forEach(el => el.textContent = new Date().getFullYear());
+
+  // Contact remains an email-compose interaction until the backend is commissioned.
+  const form = $('#contact-form');
+  const eventDate = $('#event-date');
+  function today() {
+    const d = new Date();
+    return [d.getFullYear(), String(d.getMonth()+1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-');
   }
-});
+  if (eventDate) {
+    eventDate.min = today();
+    eventDate.addEventListener('focus', () => eventDate.min = today());
+  }
+  if (form) {
+    const qp = new URLSearchParams(location.search);
+    const occasion = $('#event-type');
+    const wanted = qp.get('occasion');
+    if (wanted && occasion) {
+      const found = [...occasion.options].find(option => option.value.toLowerCase() === wanted.toLowerCase());
+      if (found) occasion.value = found.value;
+    }
+    form.addEventListener('submit', ev => {
+      ev.preventDefault();
+      if (!form.reportValidity()) return;
+      const fd = new FormData(form);
+      const val = n => String(fd.get(n) || '').trim();
+      const message = [
+        'Hello Jammin Express,', '',
+        'I would like information about entertainment for my event.', '',
+        'Name: ' + val('name'),
+        'Email: ' + val('email'),
+        'Phone: ' + (val('phone') || 'Not provided'),
+        'Type of event: ' + val('occasion'),
+        'Event date: ' + (val('date') || 'Not yet selected'),
+        'Location: ' + (val('location') || 'Not yet decided'),
+        'Additional details: ' + (val('message') || 'Please contact me to discuss.'), '',
+        'Thank you.'
+      ].join('\n');
+      const subject = 'Event inquiry — ' + val('occasion') + ' — ' + val('name');
+      const status = $('#form-status');
+      if (status) status.textContent = 'Your email application should open now. Review your message and press Send. This page has not sent your inquiry automatically.';
+      location.href = 'mailto:jason@jamminexpress.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(message);
+    });
+  }
 
-// Keep the existing no-backend inquiry behavior until the client selects an inbox integration.
-const form = $('#contact-form');
-const dateInput = $('#date');
-function todayLocal() {
-  const now=new Date();
-  return [
-    now.getFullYear(),
-    String(now.getMonth()+1).padStart(2,'0'),
-    String(now.getDate()).padStart(2,'0')
-  ].join('-');
-}
-function setMinDate() {dateInput.min=todayLocal();}
-setMinDate();
-dateInput.addEventListener('focus',setMinDate);
-form.addEventListener('submit',event=>{
-  event.preventDefault();
-  setMinDate();
-  if (!form.reportValidity()) return;
-  const data=new FormData(form);
-  const value=name=>String(data.get(name)||'').trim();
-  const lines=[
-    'Hello Jammin Express,','',
-    "I'm interested in entertainment for my event.",'',
-    'Name: '+value('name'),
-    'Email: '+value('email'),
-    'Phone: '+(value('phone')||'Not provided'),
-    'Occasion: '+value('occasion'),
-    'Event date: '+(value('date')||'Not decided'),
-    'Details: '+(value('message')||'I would love to talk through some ideas.'),'',
-    'Thank you!'
-  ];
-  const subject='Event inquiry: '+value('occasion')+' — '+value('name');
-  const url='mailto:jason@jamminexpress.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(lines.join('\n'));
-  $('#form-status').textContent='Your email app should open with your details. Review the message and press Send to submit it. Nothing has been sent automatically.';
-  window.location.href=url;
-});
+  // Image viewer shared by the full gallery page.
+  const gallery = $$('.gallery-item').filter(el => el.querySelector('img'));
+  const viewer = $('#lightbox');
+  if (viewer && gallery.length) {
+    const image = $('#lightbox-image'), count = $('#lightbox-count');
+    let index = 0, focusFrom = null;
+    const activeGallery = () => gallery.filter(el => !el.hidden);
+    function show() {
+      const visible = activeGallery();
+      if (!visible.length) return;
+      index = (index + visible.length) % visible.length;
+      const img = $('img', visible[index]);
+      image.src = img.getAttribute('src');
+      image.alt = img.alt;
+      count.textContent = String(index+1).padStart(2, '0') + ' / ' + String(visible.length).padStart(2, '0');
+    }
+    function close() {
+      if (!viewer.classList.contains('is-open')) return;
+      viewer.classList.remove('is-open');
+      viewer.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('viewer-open');
+      image.removeAttribute('src');
+      focusFrom?.focus();
+    }
+    gallery.forEach(el => el.addEventListener('click', () => {
+      focusFrom = document.activeElement;
+      index = activeGallery().indexOf(el);
+      show();
+      viewer.classList.add('is-open');
+      viewer.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('viewer-open');
+      $('#lightbox-close')?.focus();
+    }));
+    $('#lightbox-close')?.addEventListener('click', close);
+    $('#lightbox-prev')?.addEventListener('click', () => { index--; show(); });
+    $('#lightbox-next')?.addEventListener('click', () => { index++; show(); });
+    viewer.addEventListener('click', e => { if (e.target === viewer) close(); });
+    document.addEventListener('keydown', ev => {
+      if (!viewer.classList.contains('is-open')) return;
+      if (ev.key === 'Escape') { close(); ev.preventDefault(); }
+      if (ev.key === 'ArrowLeft') { index--; show(); ev.preventDefault(); }
+      if (ev.key === 'ArrowRight') { index++; show(); ev.preventDefault(); }
+      if (ev.key === 'Tab') {
+        const buttons = ['#lightbox-close', '#lightbox-prev', '#lightbox-next'].map($);
+        const current = buttons.indexOf(document.activeElement);
+        if (current === -1) { buttons[0].focus(); ev.preventDefault(); }
+        else if (ev.shiftKey && current === 0) { buttons.at(-1).focus(); ev.preventDefault(); }
+        else if (!ev.shiftKey && current === buttons.length-1) { buttons[0].focus(); ev.preventDefault(); }
+      }
+    });
+  }
+  // Gallery filters: categories correspond to actual existing photos.
+  const filters = $$('.gallery-filter');
+  filters.forEach(button => button.addEventListener('click', () => {
+    filters.forEach(el => {
+      const active = el === button;
+      el.classList.toggle('is-active', active);
+      el.setAttribute('aria-pressed', String(active));
+    });
+    const category = button.dataset.filter;
+    gallery.forEach(el => {
+      el.hidden = category !== 'all' && el.dataset.category !== category;
+    });
+    if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+  }));
 
-$('#year').textContent=String(new Date().getFullYear());
+  // Close mobile menu without stealing Escape when an image viewer is active.
+  document.addEventListener('keydown', ev => {
+    if (ev.key === 'Escape' && !viewer?.classList.contains('is-open') && menu?.getAttribute('aria-expanded') === 'true') {
+      closeMenu(); menu.focus();
+    }
+  });
+
+  // Native fallback if GSAP is blocked, absent or motion reduction is requested.
+  function fallbackReveal() {
+    if (reduced || !('IntersectionObserver' in window)) return;
+    document.documentElement.classList.add('motion-fallback');
+    const io = new IntersectionObserver(entries => entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    }), {rootMargin:'0px 0px -28px 0px', threshold:0.05});
+    $$('[data-reveal]').forEach(el => io.observe(el));
+  }
+  if (reduced || !window.gsap || !window.ScrollTrigger) {
+    fallbackReveal(); return;
+  }
+  const gsap = window.gsap;
+  const ScrollTrigger = window.ScrollTrigger;
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Short, staggered content entrances; keep all text in the DOM and accessible.
+  $$('[data-reveal]').forEach(el => {
+    gsap.from(el, {
+      autoAlpha:0, y:36, duration:1.0, ease:'power3.out',
+      scrollTrigger:{trigger:el,start:'top 91%',once:true}
+    });
+  });
+
+  // Hero and subpage photography moves subtly at a different rate to the scroll.
+  const heroPhoto = $('.hero-picture img');
+  if (heroPhoto) gsap.fromTo(heroPhoto,{scale:1.12},{scale:1,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:1}});
+  $$('.page-hero-visual img, .cinema-picture img, .feature-media img').forEach(img => {
+    gsap.fromTo(img,{scale:1.12},{scale:1,ease:'none',scrollTrigger:{trigger:img.parentElement,start:'top bottom',end:'bottom top',scrub:1.2}});
+  });
+
+  // Desktop editorial horizontal storytelling, pinned while the user scrolls.
+  const showcase = $('.scroll-showcase');
+  const viewport = $('.showcase-viewport');
+  const track = $('.showcase-track');
+  if (showcase && viewport && track) {
+    const mm = gsap.matchMedia();
+    mm.add('(min-width: 761px)', () => {
+      const distance = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
+      if (distance() < 40) return;
+      const move = gsap.to(track, {
+        x:() => -distance(), ease:'none',
+        scrollTrigger:{
+          trigger:showcase,start:'top top',pin:true,
+          end:() => '+=' + (distance() + 260),scrub:1.15,
+          invalidateOnRefresh:true,anticipatePin:1
+        }
+      });
+      const line = $('.showcase-line i');
+      if (line) gsap.fromTo(line,{width:'0%'},{
+        width:'100%',ease:'none',scrollTrigger:{
+          trigger:showcase,start:'top top',
+          end:() => '+=' + (distance() + 260),scrub:true
+        }
+      });
+      return () => {move.kill();gsap.set(track,{clearProps:'transform'});};
+    });
+  }
+
+  // Stagger photo cards on dedicated pages rather than pinning everything.
+  $$('.related-card, .detail-card, .option-card, .gallery-item').forEach((el, i) => {
+    gsap.from(el, {
+      opacity:0,y:38,duration:.9,delay:(i%3)*.055,ease:'power2.out',
+      scrollTrigger:{trigger:el,start:'top 95%',once:true}
+    });
+  });
+
+  // Service sections have subtle photographic reveal, without hiding content on slow networks.
+  $$('.feature-media, .page-hero-visual, .expertise-photo').forEach(frame => {
+    gsap.fromTo(frame,{clipPath:'inset(0 0 8% 0)'},{
+      clipPath:'inset(0 0 0% 0)',ease:'power2.out',duration:1.25,
+      scrollTrigger:{trigger:frame,start:'top 88%',once:true}
+    });
+  });
+
+  window.addEventListener('load', () => ScrollTrigger.refresh(), {once:true});
+  if (document.fonts?.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
+})();
