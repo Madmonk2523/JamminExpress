@@ -146,6 +146,54 @@
       }
     });
   }
+  // Event slider: native horizontal scrolling that never pins or clips the page.
+  // Pointer swipes, trackpads, keyboard arrows and explicit buttons all work.
+  const eventViewport = $('#event-carousel');
+  const eventCards = eventViewport ? $('.showcase-card', eventViewport) : [];
+  if (eventViewport && eventCards.length) {
+    const previous = $('#showcase-prev');
+    const next = $('#showcase-next');
+    const counter = $('#showcase-counter');
+    const fill = $('.showcase-line i');
+    let updatePending = false;
+    function currentEvent() {
+      const position = eventViewport.scrollLeft;
+      let closest = 0, distance = Infinity;
+      eventCards.forEach((card,i) => {
+        const delta = Math.abs(card.offsetLeft - eventCards[0].offsetLeft - position);
+        if(delta < distance) {distance=delta;closest=i;}
+      });
+      return closest;
+    }
+    function updateSlider() {
+      const current = currentEvent();
+      if(counter) counter.textContent = String(current+1).padStart(2,'0') + ' / ' + String(eventCards.length).padStart(2,'0');
+      if(previous) previous.disabled = current === 0;
+      if(next) next.disabled = current === eventCards.length-1;
+      const max = Math.max(1, eventViewport.scrollWidth - eventViewport.clientWidth);
+      const completion = Math.min(1, Math.max(0, (eventViewport.scrollLeft + eventViewport.clientWidth*0.25) / max));
+      if(fill) fill.style.transform = 'scaleX(' + Math.min(1,Math.max(.18,completion)) + ')';
+      updatePending = false;
+    }
+    function moveSlider(delta) {
+      const nextIndex = Math.max(0,Math.min(eventCards.length-1,currentEvent()+delta));
+      const target = eventCards[nextIndex].offsetLeft-eventCards[0].offsetLeft;
+      eventViewport.scrollTo({left:target,behavior:reduced?'instant':'smooth'});
+    }
+    previous?.addEventListener('click', () => moveSlider(-1));
+    next?.addEventListener('click', () => moveSlider(1));
+    eventViewport.addEventListener('keydown',ev=>{
+      if(ev.target !== eventViewport) return;
+      if(ev.key === 'ArrowRight'){ev.preventDefault();moveSlider(1);}
+      if(ev.key === 'ArrowLeft'){ev.preventDefault();moveSlider(-1);}
+    });
+    eventViewport.addEventListener('scroll',()=>{
+      if(!updatePending){updatePending=true;requestAnimationFrame(updateSlider);}
+    },{passive:true});
+    window.addEventListener('resize',updateSlider,{passive:true});
+    updateSlider();
+  }
+
   // Gallery filters: categories correspond to actual existing photos.
   const filters = $$('.gallery-filter');
   filters.forEach(button => button.addEventListener('click', () => {
@@ -213,34 +261,21 @@
     gsap.fromTo(img,{scale:1.12},{scale:1,ease:'none',scrollTrigger:{trigger:img.parentElement,start:'top bottom',end:'bottom top',scrub:1.2}});
   });
 
-  // Desktop editorial horizontal storytelling, pinned while the user scrolls.
-  const showcase = $('.scroll-showcase');
-  const viewport = $('.showcase-viewport');
-  const track = $('.showcase-track');
-  if (showcase && viewport && track) {
-    const mm = gsap.matchMedia();
-    mm.add('(min-width: 761px)', () => {
-      const distance = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
-      if (distance() < 40) return;
-      showcase.classList.add('is-pinned');
-      const move = gsap.to(track, {
-        x:() => -distance(), ease:'none',
-        scrollTrigger:{
-          trigger:showcase,start:'top top',pin:true,
-          end:() => '+=' + (distance() + 260),scrub:1.15,
-          invalidateOnRefresh:true,anticipatePin:1
-        }
+  // No pinned sideways-scroll section: it hid the lower edge on shorter displays.
+  // The carousel remains a real, native overflow region with explicit controls.
+  // Large-screen photographs elsewhere receive scroll-tied depth instead.
+  const photoMotion = gsap.matchMedia();
+  photoMotion.add('(min-width: 900px) and (min-height: 600px)', () => {
+    const animations = [];
+    $$('.editorial-photo img, .showcase-card img').forEach(img => {
+      const anim = gsap.fromTo(img,{scale:1.07,yPercent:-3},{
+        scale:1.12,yPercent:3,ease:'none',
+        scrollTrigger:{trigger:img.closest('figure, a'),start:'top bottom',end:'bottom top',scrub:1.2}
       });
-      const line = $('.showcase-line i');
-      if (line) gsap.fromTo(line,{width:'0%'},{
-        width:'100%',ease:'none',scrollTrigger:{
-          trigger:showcase,start:'top top',
-          end:() => '+=' + (distance() + 260),scrub:true
-        }
-      });
-      return () => {move.kill();showcase.classList.remove('is-pinned');gsap.set(track,{clearProps:'transform'});};
+      animations.push(anim);
     });
-  }
+    return () => animations.forEach(animation=>animation.kill());
+  });
 
   // Stagger photo cards on dedicated pages rather than pinning everything.
   $$('.related-card, .detail-card, .option-card, .gallery-item').forEach((el, i) => {
