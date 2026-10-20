@@ -4,10 +4,13 @@ const $$ = (selector, scope=document) => [...scope.querySelectorAll(selector)];
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // Compact header
-const header = $('.header');
+const header = $('.site-header');
+const progress = $('#scroll-progress');
 let scrollFrame = null;
 function updateHeader() {
   header.classList.toggle('is-scrolled', window.scrollY > 16);
+  const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+  progress.style.transform = `scaleX(${Math.min(1, Math.max(0, window.scrollY / max))})`;
   scrollFrame = null;
 }
 updateHeader();
@@ -16,8 +19,8 @@ window.addEventListener('scroll', () => {
 }, {passive:true});
 
 // Accessible mobile menu
-const toggle = $('.menu-toggle');
-const nav = $('#primary-nav');
+const toggle = $('.nav-toggle');
+const nav = $('#site-nav');
 function closeMenu() {
   nav.classList.remove('is-open');
   toggle.setAttribute('aria-expanded', 'false');
@@ -31,9 +34,9 @@ toggle.addEventListener('click', () => {
   toggle.setAttribute('aria-label', next ? 'Close menu' : 'Open menu');
   document.body.classList.toggle('menu-open', next);
 });
-$$('#primary-nav a').forEach(link => link.addEventListener('click', closeMenu));
+$('#site-nav a').forEach(link => link.addEventListener('click', closeMenu));
 window.addEventListener('resize', () => {
-  if (window.innerWidth > 960) closeMenu();
+  if (window.innerWidth > 900) closeMenu();
 });
 
 // A single gentle scroll reveal; the page remains readable without it.
@@ -48,6 +51,39 @@ if (!prefersReducedMotion && 'IntersectionObserver' in window) {
   $$('.reveal').forEach(item => observer.observe(item));
   document.documentElement.classList.add('motion-ready');
 }
+
+
+// Crossfade service photography only after the replacement image is ready.
+const serviceImage = $('#service-image');
+const serviceCaption = $('#service-caption');
+let serviceSequence = 0;
+$('.service-tab').forEach(button => {
+  button.addEventListener('click', () => {
+    if (button.classList.contains('is-active')) return;
+    $('.service-tab').forEach(tab => {
+      const active = tab === button;
+      tab.classList.toggle('is-active', active);
+      tab.setAttribute('aria-pressed', String(active));
+    });
+    const sequence = ++serviceSequence;
+    const next = new Image();
+    next.onload = () => {
+      if (sequence !== serviceSequence) return;
+      if (!prefersReducedMotion) serviceImage.style.opacity = '0';
+      const commit = () => {
+        if (sequence !== serviceSequence) return;
+        serviceImage.src = next.src;
+        serviceImage.alt = button.dataset.alt;
+        serviceCaption.textContent = button.dataset.caption;
+        serviceImage.style.opacity = '1';
+      };
+      if (prefersReducedMotion) commit();
+      else window.setTimeout(commit, 170);
+    };
+    next.onerror = () => { if (sequence === serviceSequence) serviceImage.style.opacity = '1'; };
+    next.src = button.dataset.image;
+  });
+});
 
 const occasion = $('#occasion');
 $$('[data-occasion]').forEach(link => link.addEventListener('click', () => {
