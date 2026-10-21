@@ -21,10 +21,62 @@ const scrollUpdate=()=>{head?.classList.toggle("scrolled",scrollY>20);if(progres
 addEventListener("scroll",()=>{if(!ticking){ticking=true;requestAnimationFrame(scrollUpdate)}},{passive:true});
 addEventListener("resize",scrollUpdate,{passive:true});scrollUpdate();
 const year=$("#year");if(year)year.textContent=new Date().getFullYear();
-// Subtle motion without hidden/blank elements or external libraries.
-if(!reduce && "IntersectionObserver" in window){
- const observer=new IntersectionObserver(items=>{for(const item of items){if(!item.isIntersecting)continue;observer.unobserve(item.target);if(item.target.animate)item.target.animate([{transform:"translateY(14px)"},{transform:"translateY(0)"}],{duration:580,easing:"cubic-bezier(.2,.65,.2,1)"})}},{threshold:.08,rootMargin:"0px 0px -18px 0px"});
- $$("[data-enter]").forEach(el=>observer.observe(el));
+// Scroll cinematography, native browser APIs only. No pinned sections,
+// third-party animation code, or invisible content.
+if(!reduce){
+ const enter=[...new Set($$("[data-enter], .event-row figure, .service-row figure, .gallery-tile, .film-preview-visual, .video-feature-photo, .moments-grid li"))];
+ const photoFrames="figure, .gallery-tile";
+ if("IntersectionObserver" in window){
+  const io=new IntersectionObserver(entries=>{
+   for(const entry of entries){
+    if(!entry.isIntersecting)continue;
+    const el=entry.target;io.unobserve(el);
+    if(!el.animate)continue;
+    const isPhoto=el.matches(photoFrames);
+    const stagger=el.matches(".moments-grid li")?(Array.from(el.parentElement.children).indexOf(el)%4)*65:0;
+    el.animate(isPhoto?[
+      {clipPath:"inset(5% 3% 5% 3%)",filter:"saturate(.75)"},
+      {clipPath:"inset(0% 0% 0% 0%)",filter:"saturate(1)"}
+    ]:[
+      {transform:"translate3d(0,27px,0)",filter:"blur(3px)"},
+      {transform:"translate3d(0,0,0)",filter:"blur(0)"}
+    ],{duration:isPhoto?950:780,delay:stagger,easing:"cubic-bezier(.18,.68,.18,1)",fill:"none"});
+   }
+  },{threshold:.06,rootMargin:"0px 0px -16px 0px"});
+  enter.forEach(el=>io.observe(el));
+ }
+ // Animation depth is applied to clipped photo frames, never to the layout.
+ // This also works without scroll-timeline browser support.
+ if(matchMedia("(min-width: 900px) and (min-height: 620px)").matches){
+  const targets=[
+   ...$$(".hero, .photo-break").map(el=>({el,max:23})),
+   ...$$(".event-row figure, .service-row figure, .film-preview-visual, .video-feature-photo").map(el=>({el,max:8}))
+  ];
+  let scheduled=false;
+  const depthUpdate=()=>{
+    scheduled=false;
+    const vh=innerHeight||800;
+    for(const item of targets){
+     const rect=item.el.getBoundingClientRect();
+     if(rect.bottom<0||rect.top>vh)continue;
+     const delta=(vh/2-(rect.top+rect.height/2))/(vh/2+rect.height/2);
+     item.el.style.setProperty("--depth",(Math.max(-1,Math.min(1,delta))*item.max).toFixed(1)+"px");
+    }
+  };
+  const queue=()=>{if(!scheduled){scheduled=true;requestAnimationFrame(depthUpdate)}};
+  addEventListener("scroll",queue,{passive:true});
+  addEventListener("resize",queue,{passive:true});
+  queue();
+ }
+ if(matchMedia("(hover: hover) and (pointer: fine)").matches){
+  $$(".event-link-grid>a, .extra-grid article").forEach(card=>{
+   card.addEventListener("pointermove",e=>{
+    const rect=card.getBoundingClientRect();
+    card.style.setProperty("--pointer-x",((e.clientX-rect.left)/rect.width*100).toFixed(1)+"%");
+    card.style.setProperty("--pointer-y",((e.clientY-rect.top)/rect.height*100).toFixed(1)+"%");
+   },{passive:true});
+  });
+ }
 }
 // Photo viewer; only on the gallery page.
 const tiles=$$(".gallery-tile"),viewer=$("#lightbox");

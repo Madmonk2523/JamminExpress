@@ -39,3 +39,11 @@ Newly added images are loaded from the official original site's WordPress upload
 - https://jamminexpress.com/wp-content/uploads/2021/12/Party-Motivators-.jpg
 
 **Migration requirement:** These three photos must be copied into the project and their HTML URLs made local **before** retiring or moving jamminexpress.com. Otherwise the images may stop loading when the original WordPress site is removed. They are currently referenced from the official live site, not stored as new repository assets.
+
+## Videography update (2026-10-21)
+Expanded Home and Services videography content is sourced from https://jamminexpress.com/videography/ and client-supplied copy: discreet high-definition recording; professionally edited final film; ceremonies, religious traditions, guests, Torah reading, candlelight ceremony, receptions, special entertainment, and décor. No packages, prices, or videographer names are invented.
+
+The two added authentic source images are remotely loaded, not yet copied into the repo:
+- https://jamminexpress.com/wp-content/uploads/2021/12/rsw_1440h_1440-7.webp
+- https://jamminexpress.com/wp-content/uploads/2021/09/fmf_11299.jpg
+These must be downloaded and served locally **before** retiring/migrating the old WordPress website. The two photos are not repeated across pages.
