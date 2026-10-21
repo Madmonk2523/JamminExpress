@@ -1,37 +1,27 @@
-# Jammin' Express — content provenance and editing rules
+# Jammin' Express — content and photo sourcing
 
-Last reviewed: 2026-10-20
+Updated 2026-10-21. The site has five public pages: Home, Events, Services, Gallery, and Contact. Previous pages are redirected to their relevant new location.
 
-This redesign replaces and modernizes the client's original site. Do not introduce factual claims without support from the live original website, material explicitly supplied by the client, or a newly verified primary source.
+## Business facts and services
+Business name, founding year (1993), location (Weston / South Florida), founder information, music/MC/party motivators, mitzvah and wedding services, games and production details originate from the original official website at https://jamminexpress.com/.
 
-## Verified public sources
+- Home: https://jamminexpress.com/ and https://jamminexpress.com/about-us/
+- Events: https://jamminexpress.com/bar-bat-mitzvahs/, /weddings/, /special-events/, and /game-shows/
+- Services: https://jamminexpress.com/ and /videography/
+- Contact: https://jamminexpress.com/contact/
 
-| Destination | Original source | Confirmed information |
-| --- | --- | --- |
-| index.html, events.html | https://jamminexpress.com/ | Company name, since 1993, DJs/MCs/dancers, South Florida, event categories |
-| about.html | https://jamminexpress.com/about-us/ | Founder Jason Bank, early mobile-DJ business, DJs/MCs/party motivators, team training and monthly meetings, historical ADJA leadership recognition, licensed and insured statement, school-board certifications, service areas |
-| mitzvahs.html | https://jamminexpress.com/bar-bat-mitzvahs/ | DJ/MC/party motivator offerings and specified add-ons |
-| weddings.html | https://jamminexpress.com/weddings/ | Ceremony/cocktail hour/reception offerings, one DJ/MC reception package, specialty music, officiant, videography, enhancements |
-| special-events.html | https://jamminexpress.com/special-events/ | Listed event types and available entertainment enhancements |
-| game-shows.html | https://jamminexpress.com/game-shows/ | Face-Off, two- and four-player setup with podiums and buzzers, group trivia, add-on framing |
-| videography.html | https://jamminexpress.com/videography/ | HD recording, edited video, listed types of moments |
-| contact.html | https://jamminexpress.com/contact/ | Jason contact email, (954) 659-3472, Weston, FL 33327 |
-| testimonials.html | https://jamminexpress.com/ | All four full client testimonials, names, event labels, and dates |
+No new customer counts, awards, packages, prices, guarantees, or staff availability have been invented.
 
-## Testimonials
+## Client testimonials
+All four full testimonials were explicitly supplied by the client and were retained on the homepage in accessible expandable cards. The user-provided label for Cindy & David Seltzer is 'Bar Mitzvah' although the quote itself refers to Leah's 'Bat Mitzvah'. This ambiguity remains for client confirmation rather than silently changing the attribution.
 
-Use the **complete wording** supplied by the client / shown on the original site. Do not invent, paraphrase, combine, or fabricate reviews. The site's original source labels Cindy & David Seltzer's testimonial **Bar Mitzvah**, while the testimonial itself calls Leah's celebration a **Bat Mitzvah**. Preserve the provided label until the client confirms a correction; do not silently rewrite either.
+## Photos
+Every displayed event photo comes from an existing image file in this repository; there are 16 distinct event photos across the five pages, and no file is used as a visible event photo on more than one page. The logo is shared appropriately as brand artwork.
 
-## Media
+The photo source/ownership rights should be confirmed by the client before the old domain is migrated. The gallery and event photo captions avoid invented identities, dates, and event details.
 
-The redesign currently uses files already checked into the JamminExpress GitHub repository, including `logo.png` and event photographs. These are actual project files, not generated images. Their exact original upload/source provenance and any reuse permissions have **not been independently verified** for each image. New media should come from the business's original website or be provided/approved by the client, and must be saved to the repository before retiring the old site. Do not use generic stock photographs while claiming they are Jammin' Express events.
+## Contact form
+It prepares an email draft through the visitor's email app; it does NOT send automatically. The wording makes this explicit.
 
-## Editorial guardrails
-
-- Use clear, verifiable copy, not invented awards, booking counts, customer totals, rankings, or performance guarantees.
-- Company credentials on the source website may change: verify current insurance/certification documents if needed for booking.
-- Do not quote prices, package inclusions, staff rosters or availability as current without client confirmation.
-- Every service or event type claimed should appear on an approved source.
-- Descriptive suggestions and planning advice must not imply a confirmed contractual offering.
-- Do not describe the website's prepared-email inquiry form as automatic form submission until a backend is connected.
-- Review the official website again before public handoff to catch source changes and reconcile client feedback.
+## SEO
+Canonical links and the XML sitemap currently use https://jamminexpress.vercel.app/ for the preview site. When the redesigned site replaces the old official website, change canonical URLs, structured data WebPage URLs, and the sitemap host to https://jamminexpress.com/ and submit the sitemap in Google Search Console.

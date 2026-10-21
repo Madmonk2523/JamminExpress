@@ -2,33 +2,68 @@
   "version": 2,
   "redirects": [
     {
+      "source": "/about.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/testimonials.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/mitzvahs.html",
+      "destination": "/events.html",
+      "permanent": true
+    },
+    {
+      "source": "/weddings.html",
+      "destination": "/events.html",
+      "permanent": true
+    },
+    {
+      "source": "/special-events.html",
+      "destination": "/events.html",
+      "permanent": true
+    },
+    {
+      "source": "/game-shows.html",
+      "destination": "/events.html",
+      "permanent": true
+    },
+    {
+      "source": "/videography.html",
+      "destination": "/services.html",
+      "permanent": true
+    },
+    {
       "source": "/about-us/",
-      "destination": "/about.html",
+      "destination": "/",
       "permanent": true
     },
     {
       "source": "/bar-bat-mitzvahs/",
-      "destination": "/mitzvahs.html",
+      "destination": "/events.html",
       "permanent": true
     },
     {
       "source": "/weddings/",
-      "destination": "/weddings.html",
+      "destination": "/events.html",
       "permanent": true
     },
     {
       "source": "/special-events/",
-      "destination": "/special-events.html",
+      "destination": "/events.html",
       "permanent": true
     },
     {
       "source": "/game-shows/",
-      "destination": "/game-shows.html",
+      "destination": "/events.html",
       "permanent": true
     },
     {
       "source": "/videography/",
-      "destination": "/videography.html",
+      "destination": "/services.html",
       "permanent": true
     },
     {
@@ -39,6 +74,11 @@
     {
       "source": "/events/",
       "destination": "/events.html",
+      "permanent": true
+    },
+    {
+      "source": "/entertainment/",
+      "destination": "/services.html",
       "permanent": true
     }
   ],
@@ -61,7 +101,7 @@
       ]
     },
     {
-      "source": "/(.*)\\.(jpg|jpeg|png|webp|gif|svg|woff2)",
+      "source": "/(.*)\\.(jpg|jpeg|png|webp|gif|svg)",
       "headers": [
         {
           "key": "Cache-Control",
