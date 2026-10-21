@@ -8,8 +8,7 @@
   const nav = $('#main-nav');
   const header = $('.site-header');
   const progress = $('.scroll-meter > span');
-  const desktop = matchMedia('(min-width: 761px)');
-  let framePending = false;
+    let framePending = false;
 
   // Shared navigation and active-page state.
   function closeMenu() {
@@ -177,7 +176,7 @@
     }
     function moveSlider(delta) {
       const nextIndex = Math.max(0,Math.min(eventCards.length-1,currentEvent()+delta));
-      const target = eventCards[nextIndex].offsetLeft-eventCards[0].offsetLeft;
+      const target = Math.max(0,eventCards[nextIndex].offsetLeft-eventCards[0].offsetLeft);
       eventViewport.scrollTo({left:target,behavior:reduced?'auto':'smooth'});
     }
     previous?.addEventListener('click', () => moveSlider(-1));
@@ -206,7 +205,7 @@
     gallery.forEach(el => {
       el.hidden = category !== 'all' && el.dataset.category !== category;
     });
-    if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+    // Grid filters do not need a pinned-scroll refresh.
   }));
 
   // Close mobile menu without stealing Escape when an image viewer is active.
