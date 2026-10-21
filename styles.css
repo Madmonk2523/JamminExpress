@@ -391,3 +391,29 @@ body{background:#f8f9f7}
  .hero-content .eyebrow,.hero h1,.hero-bottom{animation:none}
  .moments-grid li,.extra-grid article,.review{transform:none!important}
 }
+
+/* Understated finishing pass: remove decorative website-builder effects. */
+.hero::before,.hero-content::before,.overview-grid::after,.photo-break-text::after,
+.page-top::before,.page-top::after,.event-row::after,.service-row::after,
+.event-link-grid>a::before,.extra-grid article::before,
+.film-preview-visual::before,.video-feature-photo::before,
+.review summary::after,.moments-grid li::after,.button::before{display:none!important}
+.hero h1{text-shadow:none}
+.eyebrow-bar{width:20px;background:currentColor;opacity:.58}
+.event-link-grid>a{grid-template-columns:minmax(0,1fr);min-height:90px}
+.event-link-grid strong{font-weight:650}
+.header-cta,.button{letter-spacing:.045em}
+.button{gap:0;justify-content:center}
+.text-link{gap:0}
+.review:hover,.extra-grid article:hover,.moments-grid li:hover{transform:none;box-shadow:none}
+.review,.extra-grid article,.moments-grid li{transition:border-color .22s,background .22s}
+.gallery-tile span{letter-spacing:.07em}
+.gallery-tile:hover span{transform:none;letter-spacing:.07em}
+.lightbox-prev,.lightbox-next{width:auto!important;min-width:82px;padding:0 11px;font-size:.8rem!important}
+.lightbox-close{width:auto!important;min-width:65px;padding:0 12px;font-size:.8rem!important}
+.moments-grid li{gap:0;min-height:74px;justify-content:center}
+.moments-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:760px){
+ .event-link-grid>a{min-height:78px}
+ .moments-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
