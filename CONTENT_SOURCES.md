@@ -25,3 +25,17 @@ It prepares an email draft through the visitor's email app; it does NOT send aut
 
 ## SEO
 Canonical links and the XML sitemap currently use https://jamminexpress.vercel.app/ for the preview site. When the redesigned site replaces the old official website, change canonical URLs, structured data WebPage URLs, and the sitemap host to https://jamminexpress.com/ and submit the sitemap in Google Search Console.
+
+## Image placement audit (2026-10-21)
+- Home: one authentic event dance floor, one MC portrait, one DJ/crowd photograph.
+- Events: mitzvah entertainment, wedding photography, adult event dancing, and an actual hosted Face-Off game-show setup.
+- Services: an original site DJ-service image, the official Party Motivators photograph, and authentic production lighting.
+- Gallery: photos already stored in the project. Game-show imagery is now described accurately; ambiguous images retain neutral descriptions.
+- Two previously wrong placements were corrected: the Weddings picture showed a game-show scoreboard, and the Party Motivators picture was another posed MC portrait. An additional nearly identical MC portrait on the Services page was replaced.
+
+Newly added images are loaded from the official original site's WordPress uploads:
+- https://jamminexpress.com/wp-content/uploads/2021/12/weddings.webp
+- https://jamminexpress.com/wp-content/uploads/2021/12/rsw_1440h_1440.webp
+- https://jamminexpress.com/wp-content/uploads/2021/12/Party-Motivators-.jpg
+
+**Migration requirement:** These three photos must be copied into the project and their HTML URLs made local **before** retiring or moving jamminexpress.com. Otherwise the images may stop loading when the original WordPress site is removed. They are currently referenced from the official live site, not stored as new repository assets.
