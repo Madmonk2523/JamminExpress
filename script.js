@@ -9,7 +9,7 @@ const closeMenu=()=>{if(!menu||!nav)return;menu.setAttribute("aria-expanded","fa
 if(menu&&nav){
  menu.addEventListener("click",()=>{const open=menu.getAttribute("aria-expanded")!=="true";menu.setAttribute("aria-expanded",String(open));menu.setAttribute("aria-label",open?"Close menu":"Open menu");nav.classList.toggle("open",open);document.body.classList.toggle("menu-open",open)});
  $$("a",nav).forEach(a=>a.addEventListener("click",closeMenu));
- addEventListener("resize",()=>{if(innerWidth>860)closeMenu()},{passive:true});
+ addEventListener("resize",()=>{if(innerWidth>1100)closeMenu()},{passive:true});
  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&menu.getAttribute("aria-expanded")==="true"){closeMenu();menu.focus()}});
  document.addEventListener("pointerdown",e=>{if(menu.getAttribute("aria-expanded")==="true"&&!nav.contains(e.target)&&!menu.contains(e.target))closeMenu()});
 }
